@@ -41,6 +41,7 @@ export default {
         async 'settings.privateData.integrationToken'(value) {
             if (value) {
                 this.plugin.fetchProject();
+                this.plugin.fetchRoutes();
             } else {
                 wwLib.wwNotification.open({
                     text: 'Your integration token seems to be invalid. Please enter a valid token.',

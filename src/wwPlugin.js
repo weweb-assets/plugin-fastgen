@@ -11,7 +11,10 @@ export default {
     async onLoad(settings) {
         this.websiteId = wwLib.wwWebsiteData.getInfo()?.id || '9a0f5351-fc24-4915-af0c-5ccec49e2157'; // TODO to remove
         /* wwEditor:start */
-        if (settings.privateData.integrationToken) this.fetchProject();
+        if (settings.privateData.integrationToken) {
+            this.fetchProject();
+            this.fetchRoutes();
+        }
         /* wwEditor:end */
     },
     async fetchProject() {
