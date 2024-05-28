@@ -22,7 +22,7 @@ export default {
             `${wwLib.wwApiRequests._getPluginsUrl()}/designs/${this.websiteId}/fastgen/project`
         );
 
-        this.project = response.data;
+        this.project = response.data.data;
 
         console.log('🔥 Project: ', this.project);
     },
@@ -31,7 +31,7 @@ export default {
             `${wwLib.wwApiRequests._getPluginsUrl()}/designs/${this.websiteId}/fastgen/project/routes`
         );
 
-        this.routes = response.data;
+        this.routes = response.data.data;
 
         console.log('🔥 Routes: ', this.routes);
     },
