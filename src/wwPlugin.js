@@ -7,8 +7,9 @@ import './components/Collection/CollectionSummary.vue';
 export default {
     websiteId: null,
     project: null,
+    routes: [],
     async onLoad(settings) {
-        this.websiteId = wwLib.wwWebsiteData.getInfo().id;
+        this.websiteId = wwLib.wwWebsiteData.getInfo()?.id || '9a0f5351-fc24-4915-af0c-5ccec49e2157'; // TODO to remove
         /* wwEditor:start */
         if (settings.privateData.integrationToken) this.fetchProject();
         /* wwEditor:end */
@@ -18,7 +19,14 @@ export default {
             `${wwLib.wwApiRequests._getPluginsUrl()}/designs/${this.websiteId}/fastgen/project`
         );
 
-        console.log('project', this.project);
+        console.log('🔥 Project: ', this.project);
+    },
+    async fetchRoutes() {
+        this.routes = await wwAxios.get(
+            `${wwLib.wwApiRequests._getPluginsUrl()}/designs/${this.websiteId}/fastgen/project/routes`
+        );
+
+        console.log('🔥 Routes: ', this.routes);
     },
     /*=============================================m_ÔÔ_m=============================================\
         Collection API
