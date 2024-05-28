@@ -158,12 +158,7 @@ export default {
         },
         route() {
             return {
-                method: 'GET',
-                url: undefined,
-                headers: [],
-                queries: [],
-                data: [],
-                useRawBody: false,
+                value: null,
                 ...this.config,
             };
         },
@@ -173,7 +168,10 @@ export default {
     },
     methods: {
         setProp(key, value) {
-            this.$emit('update:config', { ...this.api, [key]: value });
+            this.$emit('update:config', {
+                ...this.route,
+                [key]: (this.plugin.routes.find(api => api.Path === this.route.value)[key] = value),
+            });
         },
     },
 };
