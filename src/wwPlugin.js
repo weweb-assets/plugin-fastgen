@@ -18,16 +18,20 @@ export default {
         /* wwEditor:end */
     },
     async fetchProject() {
-        this.project = await wwAxios.get(
+        const response = await wwAxios.get(
             `${wwLib.wwApiRequests._getPluginsUrl()}/designs/${this.websiteId}/fastgen/project`
-        ).data;
+        );
+
+        this.project = response.data;
 
         console.log('🔥 Project: ', this.project);
     },
     async fetchRoutes() {
-        this.routes = await wwAxios.get(
+        const response = await wwAxios.get(
             `${wwLib.wwApiRequests._getPluginsUrl()}/designs/${this.websiteId}/fastgen/project/routes`
-        ).data;
+        );
+
+        this.routes = response.data;
 
         console.log('🔥 Routes: ', this.routes);
     },
