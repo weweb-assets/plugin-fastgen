@@ -5,20 +5,20 @@ import './components/Collection/CollectionSummary.vue';
 /* wwEditor:end */
 
 export default {
-    websiteId: '9a0f5351-fc24-4915-af0c-5ccec49e2157',
+    websiteId: null,
+    project: null,
     async onLoad(settings) {
-        // console.log('TEST', wwLib, wwLib.wwWebsiteData, wwLib.wwWebsiteData.getInfo());
-        // this.websiteId = wwLib.wwWebsiteData.getInfo().id;
+        this.websiteId = wwLib.wwWebsiteData.getInfo().id;
         /* wwEditor:start */
         if (settings.privateData.integrationToken) this.fetchProject();
         /* wwEditor:end */
     },
     async fetchProject() {
-        const response = await wwAxios.get(
+        this.project = await wwAxios.get(
             `${wwLib.wwApiRequests._getPluginsUrl()}/designs/${this.websiteId}/fastgen/project`
         );
 
-        console.log('TOTOTOTO', response.data);
+        console.log('project', this.project);
     },
     /*=============================================m_ÔÔ_m=============================================\
         Collection API
