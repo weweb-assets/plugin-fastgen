@@ -20,14 +20,14 @@ export default {
     async fetchProject() {
         this.project = await wwAxios.get(
             `${wwLib.wwApiRequests._getPluginsUrl()}/designs/${this.websiteId}/fastgen/project`
-        );
+        ).data;
 
         console.log('🔥 Project: ', this.project);
     },
     async fetchRoutes() {
         this.routes = await wwAxios.get(
             `${wwLib.wwApiRequests._getPluginsUrl()}/designs/${this.websiteId}/fastgen/project/routes`
-        );
+        ).data;
 
         console.log('🔥 Routes: ', this.routes);
     },

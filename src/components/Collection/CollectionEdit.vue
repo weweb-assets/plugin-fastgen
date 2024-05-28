@@ -2,23 +2,13 @@
     <div class="fastgen-api-collection-edit">
         <wwEditorInputRow
             type="select"
-            placeholder="Select a project"
-            :model-value="plugin.settings.privateData.project"
-            :disabled="!plugin.settings.privateData.integrationToken"
-            :options="projectsOptions"
-            required
-            label="Project"
-            @update:modelValue="changeProject"
-        />
-        <wwEditorInputRow
-            type="select"
             placeholder="Select an API"
             :model-value="plugin.settings.privateData.api"
-            :disabled="!plugin.settings.privateData.project"
+            :disabled="!plugin.project"
             :options="apisOptions"
             required
             label="API"
-            @update:modelValue="changeApi"
+            @update:modelValue="setProp('route', $event)"
         />
 
         <wwEditorFormRow label="Method" required>
@@ -230,12 +220,6 @@ export default {
         };
     },
     computed: {
-        projectsOptions() {
-            return PROJECTS.map(project => ({
-                label: project.Name,
-                value: project.Name,
-            }));
-        },
         apisOptions() {
             return APIs.map(api => ({
                 label: api.Name,
