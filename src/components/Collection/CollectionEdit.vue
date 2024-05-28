@@ -1,5 +1,26 @@
 <template>
     <div class="fastgen-api-collection-edit">
+        <wwEditorInputRow
+            type="select"
+            placeholder="Select a project"
+            :model-value="plugin.settings.privateData.project"
+            :disabled="!plugin.settings.privateData.integrationToken"
+            :options="projectsOptions"
+            required
+            label="Project"
+            @update:modelValue="changeProject"
+        />
+        <wwEditorInputRow
+            type="select"
+            placeholder="Select an API"
+            :model-value="plugin.settings.privateData.api"
+            :disabled="!plugin.settings.privateData.project"
+            :options="apisOptions"
+            required
+            label="API"
+            @update:modelValue="changeApi"
+        />
+
         <wwEditorFormRow label="Method" required>
             <wwEditorInputTextSelect
                 :options="methodOptions"
@@ -128,8 +149,68 @@
 </template>
 
 <script>
+const PROJECTS = [
+    {
+        Uuid: 'b16e2674-e39c-456f-a133-e0528b4a199f',
+        Name: 'wwExplo',
+        Subdomain: 'wwexplo.fastgenapp.com',
+        CreatedAt: '2024-03-26T09:25:11.758221Z',
+        UpdatedAt: '2024-03-26T09:25:11.758221Z',
+        TeamUuid: '41a68fa3-1852-41b9-ad6f-a3aa5431010b',
+    },
+];
+
+const APIs = [
+    {
+        Id: 6,
+        Version: 17,
+        Method: 'POST',
+        Path: '/post',
+        Name: 'Push',
+        Description: '',
+        Authentication: {
+            Required: true,
+            UsersAllowed: true,
+            AllowedUserRoles: null,
+            ApiTokens: [Array],
+        },
+        BodyValidation: {
+            age: {
+                Type: 'number',
+            },
+            email: {
+                Type: 'string',
+            },
+            username: {
+                Type: 'string',
+                MinLength: 3,
+            },
+        },
+        CreatedAt: '2024-04-08T21:10:03.900241Z',
+        UpdatedAt: '2024-05-27T16:54:02.093072Z',
+    },
+    {
+        Id: 1,
+        Version: 29,
+        Method: 'GET',
+        Path: '/hello',
+        Name: 'hello',
+        Description: '',
+        Authentication: {
+            ApiTokens: [],
+            Required: false,
+            UsersAllowed: false,
+            AllowedUserRoles: null,
+        },
+        BodyValidation: {},
+        CreatedAt: '2024-03-26T09:29:43.515629Z',
+        UpdatedAt: '2024-04-09T14:02:36.044881Z',
+    },
+];
+
 export default {
     props: {
+        plugin: { type: Object, required: true },
         collection: { type: Object, required: true },
         config: { type: Object, required: true },
     },
@@ -149,6 +230,18 @@ export default {
         };
     },
     computed: {
+        projectsOptions() {
+            return PROJECTS.map(project => ({
+                label: project.Name,
+                value: project.Name,
+            }));
+        },
+        apisOptions() {
+            return APIs.map(api => ({
+                label: api.Name,
+                value: api.Path,
+            }));
+        },
         api() {
             return {
                 method: 'GET',
