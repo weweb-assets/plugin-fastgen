@@ -12,12 +12,10 @@
         />
 
         <div v-if="route.path">
-            <wwEditorFormRow label="Path">
-                <div class="p-2 ww-border-radius-02 border-primary">
-                    {{ route.name }} <br />
-                    <span class="body-sm content-secondary mt-1">{{ plugin.project.Subdomain + route.path }}</span>
-                </div>
-            </wwEditorFormRow>
+            <div class="p-2 ww-border-radius-02 border-primary">
+                {{ route.name }} <br />
+                <span class="body-sm content-secondary mt-1">{{ plugin.project.Subdomain + route.path }}</span>
+            </div>
 
             <wwEditorFormRow v-if="route.description" label="Description">
                 <div class="p-2 ww-border-radius-02 border-primary">
@@ -102,6 +100,7 @@ export default {
         },
         route() {
             const route = this.plugin.routes.find(route => route.Path === this.config.path) || {};
+
             return {
                 path: route.Path || '',
                 name: route.Name || '',
@@ -115,8 +114,7 @@ export default {
     },
     methods: {
         setRoutePath(path) {
-            const route = this.plugin.routes.find(api => api.Path === path);
-            this.$emit('update:config', { ...this.config, path: route.Path });
+            this.$emit('update:config', { ...this.config, path });
         },
         setProp(key, value) {
             const updatedRoute = { ...this.route, [key]: value };
