@@ -1,207 +1,144 @@
 <template>
-    <wwEditorFormRow label="Method" required>
-        <wwEditorInputTextSelect
-            :options="methodOptions"
-            :model-value="method"
-            placeholder="Select a method"
-            @update:modelValue="setMethod"
-        />
-    </wwEditorFormRow>
-    <wwEditorInputRow
-        label="URL"
-        required
-        type="query"
-        :model-value="url"
-        placeholder="https://your-project.fastgenapp.com/your-path"
-        bindable
-        @update:modelValue="setUrl"
-    />
-    <template v-if="isData">
-        <wwEditorFormRow>
-            <wwEditorInputRadio :choices="dataChoices" :model-value="useRawBody" @update:modelValue="setUseRawBody" />
-        </wwEditorFormRow>
+    <div class="fastgen-api-collection-edit">
         <wwEditorInputRow
-            v-if="useRawBody"
-            type="query"
-            :model-value="data"
-            label="Body"
-            bindable
-            @update:modelValue="setData"
+            type="select"
+            placeholder="Select a route"
+            :model-value="route.path"
+            :disabled="!plugin.project"
+            :options="routesOptions"
+            required
+            label="Route"
+            @update:modelValue="setRoutePath"
         />
-        <wwEditorInputRow
-            v-else
-            type="array"
-            :model-value="data"
-            label="Fields"
-            bindable
-            @update:modelValue="setData"
-            @add-item="setData([...(data || []), {}])"
-        >
-            <template #default="{ item, setItem }">
-                <wwEditorInputRow
-                    type="query"
-                    :model-value="item.key"
-                    label="Key"
-                    placeholder="Enter a value"
-                    bindable
-                    small
-                    @update:modelValue="setItem({ ...item, key: $event })"
-                />
-                <wwEditorInputRow
-                    type="query"
-                    :model-value="item.value"
-                    label="Value"
-                    placeholder="Enter a value"
-                    bindable
-                    small
-                    @update:modelValue="setItem({ ...item, value: $event })"
-                />
-            </template>
-        </wwEditorInputRow>
-    </template>
-    <wwEditorInputRow
-        label="Headers"
-        type="array"
-        :model-value="headers"
-        bindable
-        @update:modelValue="setHeaders"
-        @add-item="setHeaders([...(headers || []), {}])"
-    >
-        <template #default="{ item, setItem }">
+
+        <div v-if="selectedRoute.Name">
+            <div class="p-2 mb-4 ww-border-radius-02 border-primary">
+                {{ selectedRoute.Name }} <br />
+                <span class="body-sm content-secondary mt-1">{{ plugin.project.Subdomain + selectedRoute.Path }}</span>
+            </div>
+
+            <wwEditorFormRow v-if="route.description" label="Description">
+                <div class="p-2 ww-border-radius-02 border-primary">
+                    {{ selectedRoute.Description }}
+                </div>
+            </wwEditorFormRow>
+
+            <wwEditorFormRow label="Method">
+                <wwEditorInputText :model-value="selectedRoute.Method" disabled />
+            </wwEditorFormRow>
+
+            <wwEditorFormRow label="Authentication" v-if="Object.keys(selectedRoute.Authentication).length">
+                <wwEditorInputPreview :value="selectedRoute.Authentication" colored formated />
+            </wwEditorFormRow>
+
+            <wwEditorFormRow label="Body Validation" v-if="Object.keys(selectedRoute.BodyValidation).length">
+                <wwEditorInputPreview :value="selectedRoute.BodyValidation" colored formated />
+            </wwEditorFormRow>
+
             <wwEditorInputRow
-                type="query"
-                :model-value="item.key"
-                label="Key"
-                placeholder="Enter a value"
-                bindable
-                small
-                @update:modelValue="setItem({ ...item, key: $event })"
-            />
+                label="Headers"
+                type="array"
+                :model-value="route.headers"
+                :bindable="true"
+                @update:modelValue="setHeaders"
+                @add-item="setHeaders([...(headers || []), {}])"
+            >
+                <template #default="{ item, setItem }">
+                    <wwEditorInputRow
+                        type="query"
+                        :model-value="item.key"
+                        label="Key"
+                        placeholder="Enter a value"
+                        small
+                        :bindable="true"
+                        @update:modelValue="setItem({ ...item, key: $event })"
+                    />
+                    <wwEditorInputRow
+                        type="query"
+                        :model-value="item.value"
+                        label="Value"
+                        placeholder="Enter a value"
+                        small
+                        :bindable="true"
+                        @update:modelValue="setItem({ ...item, value: $event })"
+                    />
+                </template>
+            </wwEditorInputRow>
+
             <wwEditorInputRow
-                type="query"
-                :model-value="item.value"
-                label="Value"
-                placeholder="Enter a value"
-                bindable
-                small
-                @update:modelValue="setItem({ ...item, value: $event })"
-            />
-        </template>
-    </wwEditorInputRow>
-    <wwEditorInputRow
-        type="array"
-        :model-value="queries"
-        label="Query string"
-        bindable
-        @update:modelValue="setQueries"
-        @add-item="setQueries([...(queries || []), {}])"
-    >
-        <template #default="{ item, setItem }">
-            <wwEditorInputRow
-                type="query"
-                :model-value="item.key"
-                label="Key"
-                placeholder="Enter a value"
-                bindable
-                small
-                @update:modelValue="setItem({ ...item, key: $event })"
-            />
-            <wwEditorInputRow
-                type="query"
-                :model-value="item.value"
-                label="Value"
-                placeholder="Enter a value"
-                bindable
-                small
-                @update:modelValue="setItem({ ...item, value: $event })"
-            />
-        </template>
-    </wwEditorInputRow>
+                label="Body"
+                type="array"
+                :model-value="route.body"
+                :bindable="true"
+                @update:modelValue="setBody"
+                @add-item="setBody([...(body || []), {}])"
+            >
+                <template #default="{ item, setItem }">
+                    <wwEditorInputRow
+                        type="query"
+                        :model-value="item.key"
+                        label="Key"
+                        placeholder="Enter a value"
+                        small
+                        :bindable="true"
+                        @update:modelValue="setItem({ ...item, key: $event })"
+                    />
+                    <wwEditorInputRow
+                        type="query"
+                        :model-value="item.value"
+                        label="Value"
+                        placeholder="Enter a value"
+                        small
+                        :bindable="true"
+                        @update:modelValue="setItem({ ...item, value: $event })"
+                    />
+                </template>
+            </wwEditorInputRow>
+        </div>
+    </div>
 </template>
 
 <script>
 export default {
     props: {
         plugin: { type: Object, required: true },
+        config: { type: Object, required: true },
         args: {
             type: Object,
             default: () => ({
-                url: null,
-                method: null,
-                data: [],
+                path: null,
+                body: [],
                 headers: [],
-                queries: [],
             }),
         },
     },
     emits: ['update:args'],
-    data() {
-        return {
-            dataChoices: [
-                { label: 'Parsed fields', value: false, default: true },
-                { label: 'Raw body', value: true },
-            ],
-            methodOptions: [
-                { label: 'GET', value: 'GET' },
-                { label: 'POST', value: 'POST', default: true },
-                { label: 'PATCH', value: 'PATCH' },
-                { label: 'DELETE', value: 'DELETE' },
-            ],
-        };
-    },
     computed: {
-        url() {
-            return this.args.url;
+        selectedRoute() {
+            return this.plugin.routes.find(route => route.Path === this.config.path) || {};
+        },
+        path() {
+            return this.plugin.project?.Path;
         },
         method() {
             return this.args.method;
         },
-        data() {
-            return this.args.data || [];
-        },
         headers() {
             return this.args.headers || [];
         },
-        queries() {
-            return this.args.queries || [];
+        body() {
+            return this.args.body || [];
         },
-        dataType() {
-            return this.args.dataType;
-        },
-        isThroughServer() {
-            return this.args.isThroughServer || false;
-        },
-        isWithCredentials() {
-            return this.args.isWithCredentials || false;
-        },
-        useRawBody() {
-            return this.args.useRawBody || false;
-        },
-        isData() {
-            return ['POST', 'PATCH'].includes(this.method);
-        },
-    },
-    mounted() {
-        if (!this.method) this.setMethod('POST');
     },
     methods: {
-        setUrl(url) {
-            this.$emit('update:args', { ...this.args, url });
-        },
-        setMethod(method) {
-            this.$emit('update:args', { ...this.args, method });
-        },
-        setData(data) {
-            this.$emit('update:args', { ...this.args, data });
-        },
-        setQueries(queries) {
-            this.$emit('update:args', { ...this.args, queries });
+        setRoutePath(path) {
+            this.$emit('update:args', { ...this.args, path });
         },
         setHeaders(headers) {
             this.$emit('update:args', { ...this.args, headers });
         },
-        setUseRawBody(useRawBody) {
-            this.$emit('update:args', { ...this.args, useRawBody, data: useRawBody ? null : [] });
+        setBody(body) {
+            this.$emit('update:args', { ...this.args, body });
         },
     },
 };

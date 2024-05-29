@@ -79,8 +79,6 @@ export default {
             headers: payload.headers,
         });
 
-        console.log('🔥 Response: ', response.data);
-
         return response.data;
     },
 

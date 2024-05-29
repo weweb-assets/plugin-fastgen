@@ -3,7 +3,7 @@ export default {
         settings: {
             edit: () => import('./src/components/SettingsEdit.vue'),
             summary: () => import('./src/components/SettingsSummary.vue'),
-            getIsValid(settings) {
+            getIsValid() {
                 return true;
             },
             onSave: 'onLoad',
@@ -12,7 +12,7 @@ export default {
             edit: () => import('./src/components/Collection/CollectionEdit.vue'),
             summary: () => import('./src/components/Collection/CollectionSummary.vue'),
             getIsValid(config) {
-                return true;
+                return !!config.path && !!config.method;
             },
             modes: ['dynamic'],
         },
@@ -24,8 +24,8 @@ export default {
             isAsync: true,
             /* wwEditor:start */
             edit: () => import('./src/components/Function/Request.vue'),
-            getIsValid({ url, method }) {
-                return !!url && !!method;
+            getIsValid({ path, method }) {
+                return !!path && !!method;
             },
             /* wwEditor:end */
         },
