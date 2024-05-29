@@ -45,7 +45,7 @@ export default {
             const { path, headers, body } = collection.config;
 
             const route = this.routes.find(route => route.Path === path);
-            const url = this.project.Subdomain + path;
+            const url = 'https://' + this.project.Subdomain + path;
             const method = route.Method;
 
             const responseData = await this._apiRequest(url, method, body, headers);
@@ -76,15 +76,15 @@ export default {
     },
 
     async _apiRequest(url, method, body, headers) {
-        // const payload = computePayload(method, body, headers);
+        const payload = computePayload(method, body, headers);
 
-        console.log('🔥 _apiRequest: ', url, method);
+        console.log('🔥 _apiRequest: ', url, method, payload);
 
         const response = await axios({
             url,
             method,
-            // data: payload.data,
-            // headers: payload.headers,
+            data: payload.data,
+            headers: payload.headers,
         });
 
         console.log('🔥 Response: ', response.data);
