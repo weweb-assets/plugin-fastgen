@@ -72,8 +72,6 @@ export default {
     async _apiRequest(url, method, body, headers) {
         const payload = computePayload(method, body, headers);
 
-        console.log('🔥 _apiRequest: ', url, method, payload);
-
         const response = await axios({
             url,
             method,
