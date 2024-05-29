@@ -38,7 +38,7 @@ export default {
         try {
             const { path, headers, body } = collection.config;
 
-            const responseData = await this._apiRequest(path, method, body, headers);
+            const responseData = await this._apiRequest(path, body, headers);
 
             return { data: responseData, error: null };
         } catch (err) {
@@ -48,9 +48,9 @@ export default {
         }
     },
 
-    async apiRequest({ path, method, body, headers }, wwUtils) {
+    async apiRequest({ path, body, headers }, wwUtils) {
         /* wwEditor:start */
-        const payload = computePayload(method, body, headers);
+        const payload = computePayload(body, headers);
         if (wwUtils) {
             wwUtils.log('info', `Executing request ${method} on ${path}`, {
                 type: 'request',
@@ -62,15 +62,15 @@ export default {
         }
 
         /* wwEditor:end */
-        return await this._apiRequest(path, method, body, headers);
+        return await this._apiRequest(path, body, headers);
     },
 
-    async _apiRequest(path, method, body, headers) {
+    async _apiRequest(path, body, headers) {
         const route = this.routes.find(route => route.Path === path);
         const url = 'https://' + this.project.Subdomain + path;
         const method = route.Method;
 
-        const payload = computePayload(method, body, headers);
+        const payload = computePayload(body, headers);
 
         const response = await axios({
             url,
@@ -94,7 +94,7 @@ export default {
     /* wwEditor:end */
 };
 
-function computePayload(method, data, headers, dataType, useRawBody) {
+function computePayload(data, headers, dataType, useRawBody) {
     if (!useRawBody) {
         data = computeList(data);
 
@@ -112,15 +112,6 @@ function computePayload(method, data, headers, dataType, useRawBody) {
             default:
                 break;
         }
-    }
-
-    switch (method) {
-        case 'GET':
-        case 'DELETE':
-            data = undefined;
-            break;
-        default:
-            break;
     }
 
     return {
