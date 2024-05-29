@@ -11,25 +11,25 @@
             @update:modelValue="setRoutePath"
         />
 
-        <div v-if="route.path">
+        <div v-if="selectedRoute.Name">
             <div class="p-2 mb-4 ww-border-radius-02 border-primary">
-                {{ route.name }} <br />
-                <span class="body-sm content-secondary mt-1">{{ plugin.project.Subdomain + route.path }}</span>
+                {{ selectedRoute.Name }} <br />
+                <span class="body-sm content-secondary mt-1">{{ plugin.project.Subdomain + selectedRoute.path }}</span>
             </div>
 
             <wwEditorFormRow v-if="route.description" label="Description">
                 <div class="p-2 ww-border-radius-02 border-primary">
-                    {{ route.description }}
+                    {{ selectedRoute.description }}
                 </div>
             </wwEditorFormRow>
 
             <wwEditorFormRow label="Method">
-                <wwEditorInputText :model-value="route.method" disabled />
+                <wwEditorInputText :model-value="selectedRoute.method" disabled />
             </wwEditorFormRow>
 
             <wwEditorFormRow label="Authentication">
                 <wwEditorInputCode
-                    :model-value="JSON.stringify(route.authentication)"
+                    :model-value="JSON.stringify(selectedRoute.authentication)"
                     class="code-editor"
                     no-settings
                     format
@@ -39,7 +39,7 @@
 
             <wwEditorFormRow label="Body Validation">
                 <wwEditorInputCode
-                    :model-value="JSON.stringify(route.bodyValidation)"
+                    :model-value="JSON.stringify(selectedRoute.bodyValidation)"
                     class="code-editor"
                     no-settings
                     format
@@ -98,17 +98,15 @@ export default {
                 value: api.Path,
             }));
         },
+        selectedRoute() {
+            return this.plugin.routes.find(route => route.Path === this.config.path) || {};
+        },
         route() {
-            const route = this.plugin.routes.find(route => route.Path === this.config.path) || {};
-
             return {
-                path: route.Path || '',
-                name: route.Name || '',
-                method: route.Method || '',
-                description: route.Description || '',
-                authentication: route.Authentication || {},
-                bodyValidation: route.BodyValidation || {},
-                headers: route.Headers || [],
+                path: null,
+                headers: [],
+                body: {},
+                ...this.config,
             };
         },
     },
