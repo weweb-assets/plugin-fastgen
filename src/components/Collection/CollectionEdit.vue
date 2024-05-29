@@ -14,22 +14,22 @@
         <div v-if="selectedRoute.Name">
             <div class="p-2 mb-4 ww-border-radius-02 border-primary">
                 {{ selectedRoute.Name }} <br />
-                <span class="body-sm content-secondary mt-1">{{ plugin.project.Subdomain + selectedRoute.path }}</span>
+                <span class="body-sm content-secondary mt-1">{{ plugin.project.Subdomain + selectedRoute.Path }}</span>
             </div>
 
             <wwEditorFormRow v-if="route.description" label="Description">
                 <div class="p-2 ww-border-radius-02 border-primary">
-                    {{ selectedRoute.description }}
+                    {{ selectedRoute.Description }}
                 </div>
             </wwEditorFormRow>
 
             <wwEditorFormRow label="Method">
-                <wwEditorInputText :model-value="selectedRoute.method" disabled />
+                <wwEditorInputText :model-value="selectedRoute.Method" disabled />
             </wwEditorFormRow>
 
             <wwEditorFormRow label="Authentication">
                 <wwEditorInputCode
-                    :model-value="JSON.stringify(selectedRoute.authentication)"
+                    :model-value="JSON.stringify(selectedRoute.Authentication)"
                     class="code-editor"
                     no-settings
                     format
@@ -39,7 +39,7 @@
 
             <wwEditorFormRow label="Body Validation">
                 <wwEditorInputCode
-                    :model-value="JSON.stringify(selectedRoute.bodyValidation)"
+                    :model-value="JSON.stringify(selectedRoute.BodyValidation)"
                     class="code-editor"
                     no-settings
                     format
