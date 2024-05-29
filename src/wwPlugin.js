@@ -45,10 +45,9 @@ export default {
             const { path, headers, body } = collection.config;
 
             const route = this.routes.find(route => route.path === path);
+            console.log('🤖 route: ', this.routes, route, { path, headers, body });
             const url = this.project.Subdomain + path;
             const method = route.Method;
-
-            console.log('🤖 url, method, body, headers: ', url, method, body, headers);
 
             const responseData = await this._apiRequest(url, method, body, headers);
 
