@@ -44,8 +44,7 @@ export default {
         try {
             const { path, headers, body } = collection.config;
 
-            const route = this.routes.find(route => route.path === path);
-            console.log('🤖 route: ', this.routes, route, { path, headers, body });
+            const route = this.routes.find(route => route.Path === path);
             const url = this.project.Subdomain + path;
             const method = route.Method;
 
