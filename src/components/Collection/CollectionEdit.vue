@@ -128,6 +128,6 @@ export default {
 
 <style>
 .code-editor {
-    max-height: 300px;
+    max-height: 200px;
 }
 </style>
