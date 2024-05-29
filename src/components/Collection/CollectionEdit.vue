@@ -28,23 +28,25 @@
             </wwEditorFormRow>
 
             <wwEditorFormRow label="Authentication">
-                <wwEditorInputCode
+                <!-- <wwEditorInputCode
                     :model-value="JSON.stringify(selectedRoute.Authentication)"
                     class="code-editor"
                     no-settings
                     format
                     disabled
-                />
+                /> -->
+                <wwEditorInputPreview :value="selectedRoute.Authentication" colored formated />
             </wwEditorFormRow>
 
             <wwEditorFormRow label="Body Validation">
-                <wwEditorInputCode
+                <!-- <wwEditorInputCode
                     :model-value="JSON.stringify(selectedRoute.BodyValidation)"
                     class="code-editor"
                     no-settings
                     format
                     disabled
-                />
+                /> -->
+                <wwEditorInputPreview :value="selectedRoute.BodyValidation" colored formated />
             </wwEditorFormRow>
 
             <wwEditorInputRow
