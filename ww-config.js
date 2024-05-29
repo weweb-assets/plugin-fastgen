@@ -12,7 +12,7 @@ export default {
             edit: () => import('./src/components/Collection/CollectionEdit.vue'),
             summary: () => import('./src/components/Collection/CollectionSummary.vue'),
             getIsValid(config) {
-                return !!config.path && !!config.method;
+                return !!config.path;
             },
             modes: ['dynamic'],
         },
