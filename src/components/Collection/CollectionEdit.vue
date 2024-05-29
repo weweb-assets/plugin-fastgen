@@ -12,7 +12,7 @@
         />
 
         <div v-if="route.path">
-            <div class="p-2 ww-border-radius-02 border-primary">
+            <div class="p-2 mb-4 ww-border-radius-02 border-primary">
                 {{ route.name }} <br />
                 <span class="body-sm content-secondary mt-1">{{ plugin.project.Subdomain + route.path }}</span>
             </div>
