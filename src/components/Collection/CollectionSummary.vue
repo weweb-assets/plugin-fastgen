@@ -1,7 +1,9 @@
 <template>
     <div class="supabase-collection-summary">
-        <div class="label-sm content-primary">API</div>
-        <div class="body-sm content-secondary truncate">{{ config.url || '-' }}</div>
+        <div class="p-2 mb-4 ww-border-radius-02 border-primary">
+            {{ config.path }} <br />
+            <span class="body-sm content-secondary mt-1">{{ plugin.project.Subdomain + config.path }}</span>
+        </div>
     </div>
 </template>
 
@@ -9,6 +11,7 @@
 export default {
     props: {
         config: { type: Object, required: true },
+        plugin: { type: Object, required: true },
     },
 };
 </script>
