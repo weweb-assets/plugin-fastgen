@@ -6,13 +6,13 @@ export default {
             getIsValid(settings) {
                 return true;
             },
-            // onSave: 'initManager',
+            onSave: 'onLoad',
         },
         collection: {
             edit: () => import('./src/components/Collection/CollectionEdit.vue'),
             summary: () => import('./src/components/Collection/CollectionSummary.vue'),
             getIsValid(config) {
-                return !!config.method && !!config.url;
+                return true;
             },
             modes: ['dynamic'],
         },
