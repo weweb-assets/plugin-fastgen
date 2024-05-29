@@ -17,7 +17,7 @@
                 <span class="body-sm content-secondary mt-1">{{ plugin.project.Subdomain + selectedRoute.Path }}</span>
             </div>
 
-            <wwEditorFormRow v-if="route.description" label="Description">
+            <wwEditorFormRow v-if="selectedRoute.Description" label="Description">
                 <div class="p-2 ww-border-radius-02 border-primary">
                     {{ selectedRoute.Description }}
                 </div>
