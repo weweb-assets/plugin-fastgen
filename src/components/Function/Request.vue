@@ -3,7 +3,7 @@
         <wwEditorInputRow
             type="select"
             placeholder="Select a route"
-            :model-value="route.path"
+            :model-value="path"
             :disabled="!plugin.project"
             :options="routesOptions"
             required
@@ -38,7 +38,7 @@
             <wwEditorInputRow
                 label="Headers"
                 type="array"
-                :model-value="route.headers"
+                :model-value="headers"
                 :bindable="true"
                 @update:modelValue="setHeaders"
                 @add-item="setHeaders([...(headers || []), {}])"
@@ -68,7 +68,7 @@
             <wwEditorInputRow
                 label="Body"
                 type="array"
-                :model-value="route.body"
+                :model-value="body"
                 :bindable="true"
                 @update:modelValue="setBody"
                 @add-item="setBody([...(body || []), {}])"
@@ -114,11 +114,17 @@ export default {
     },
     emits: ['update:args'],
     computed: {
+        routesOptions() {
+            return this.plugin.routes.map(api => ({
+                label: api.Path,
+                value: api.Path,
+            }));
+        },
         selectedRoute() {
             return this.plugin.routes.find(route => route.Path === this.config.path) || {};
         },
         path() {
-            return this.plugin.project?.Path;
+            return this.args.path;
         },
         method() {
             return this.args.method;
