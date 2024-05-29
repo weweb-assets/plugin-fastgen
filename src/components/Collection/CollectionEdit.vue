@@ -2,12 +2,12 @@
     <div class="fastgen-api-collection-edit">
         <wwEditorInputRow
             type="select"
-            placeholder="Select an API"
+            placeholder="Select a route"
             :model-value="route.path"
             :disabled="!plugin.project"
             :options="routesOptions"
             required
-            label="API"
+            label="Route"
             @update:modelValue="setRoutePath"
         />
 
