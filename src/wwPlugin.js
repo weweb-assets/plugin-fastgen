@@ -9,7 +9,7 @@ export default {
     project: null,
     routes: [],
     async onLoad(settings) {
-        this.websiteId = wwLib.wwWebsiteData.getInfo()?.id || '9a0f5351-fc24-4915-af0c-5ccec49e2157'; // TODO to remove
+        this.websiteId = wwLib.wwWebsiteData.getInfo()?.id;
         /* wwEditor:start */
         if (settings.privateData.integrationToken) {
             this.fetchProject();
@@ -23,8 +23,6 @@ export default {
         );
 
         this.project = response.data.data;
-
-        console.log('🔥 Project: ', this.project);
     },
     async fetchRoutes() {
         const response = await wwAxios.get(
@@ -32,15 +30,11 @@ export default {
         );
 
         this.routes = response.data.data;
-
-        console.log('🔥 Routes: ', this.routes);
     },
     /*=============================================m_ÔÔ_m=============================================\
         Collection API
     \================================================================================================*/
     async fetchCollection(collection) {
-        console.log('🤖 Collection: ', collection);
-
         try {
             const { path, headers, body } = collection.config;
 
