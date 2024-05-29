@@ -14,11 +14,12 @@
         <div v-if="route.path">
             <wwEditorFormRow label="Path">
                 <div class="p-2 ww-border-radius-02 border-primary">
-                    {{ route.path }}
+                    {{ route.path }} <br />
+                    <span class="body-sm content-secondary">{{ plugin.project.Subdomain + route.path }}</span>
                 </div>
             </wwEditorFormRow>
 
-            <wwEditorFormRow label="Description">
+            <wwEditorFormRow v-if="route.description" label="Description">
                 <div class="p-2 ww-border-radius-02 border-primary">
                     {{ route.description }}
                 </div>
@@ -33,6 +34,7 @@
                     :model-value="JSON.stringify(route.authentication)"
                     class="code-editor"
                     no-settings
+                    format
                     disabled
                 />
             </wwEditorFormRow>
@@ -42,6 +44,7 @@
                     :model-value="JSON.stringify(route.bodyValidation)"
                     class="code-editor"
                     no-settings
+                    format
                     disabled
                 />
             </wwEditorFormRow>
