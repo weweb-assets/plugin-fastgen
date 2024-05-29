@@ -48,7 +48,7 @@ export default {
             const url = this.project.Subdomain + path;
             const method = route.Method;
 
-            const responseData = await this._apiRequest(url, method, headers, body);
+            const responseData = await this._apiRequest(url, method, body, headers);
 
             return { data: responseData, error: null };
         } catch (err) {
@@ -58,34 +58,34 @@ export default {
         }
     },
 
-    async apiRequest({ url, method, data, headers, queries: params }, wwUtils) {
+    async apiRequest({ url, method, body, headers }, wwUtils) {
         /* wwEditor:start */
-        const payload = computePayload(method, data, headers, params);
+        const payload = computePayload(method, body, headers);
         if (wwUtils) {
             wwUtils.log('info', `Executing request ${method} on ${url}`, {
                 type: 'request',
                 preview: {
                     Data: payload.data,
                     Headers: payload.headers,
-                    'Query string': payload.params,
                 },
             });
         }
 
         /* wwEditor:end */
-        return await this._apiRequest(url, method, data, headers, params);
+        return await this._apiRequest(url, method, body, headers);
     },
 
-    async _apiRequest(url, method, headers, body) {
-        const payload = computePayload(method, data, headers, params);
+    async _apiRequest(url, method, body, headers) {
+        const payload = computePayload(method, body, headers);
 
         const response = await axios({
             url,
             method,
             data: payload.data,
-            params: payload.params,
             headers: payload.headers,
         });
+
+        console.log('🔥 Response: ', response.data);
 
         return response.data;
     },
@@ -102,7 +102,7 @@ export default {
     /* wwEditor:end */
 };
 
-function computePayload(method, data, headers, params, dataType, useRawBody) {
+function computePayload(method, data, headers, dataType, useRawBody) {
     if (!useRawBody) {
         data = computeList(data);
 
@@ -133,7 +133,6 @@ function computePayload(method, data, headers, params, dataType, useRawBody) {
 
     return {
         data,
-        params: computeList(params),
         headers: {
             'content-type': dataType || 'application/json',
             ...computeList(headers),
