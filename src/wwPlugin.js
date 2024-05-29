@@ -50,7 +50,10 @@ export default {
 
     async apiRequest({ path, body, headers }, wwUtils) {
         /* wwEditor:start */
-        const payload = computePayload(body, headers);
+        const route = this.routes.find(route => route.Path === path);
+        const method = route.Method;
+
+        const payload = computePayload(method, body, headers);
         if (wwUtils) {
             wwUtils.log('info', `Executing request ${method} on ${path}`, {
                 type: 'request',
@@ -66,11 +69,11 @@ export default {
     },
 
     async _apiRequest(path, body, headers) {
-        const route = this.routes.find(route => route.Path === path);
         const url = 'https://' + this.project.Subdomain + path;
+        const route = this.routes.find(route => route.Path === path);
         const method = route.Method;
 
-        const payload = computePayload(body, headers);
+        const payload = computePayload(method, body, headers);
 
         const response = await axios({
             url,
@@ -94,7 +97,7 @@ export default {
     /* wwEditor:end */
 };
 
-function computePayload(data, headers, dataType, useRawBody) {
+function computePayload(method, data, headers, dataType, useRawBody) {
     if (!useRawBody) {
         data = computeList(data);
 
@@ -112,6 +115,15 @@ function computePayload(data, headers, dataType, useRawBody) {
             default:
                 break;
         }
+    }
+
+    switch (method) {
+        case 'GET':
+        case 'DELETE':
+            data = undefined;
+            break;
+        default:
+            break;
     }
 
     return {
