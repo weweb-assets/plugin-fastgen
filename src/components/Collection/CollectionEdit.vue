@@ -25,11 +25,11 @@
             </wwEditorFormRow>
 
             <wwEditorFormRow label="Authentication">
-                <wwEditorInputCode v-model="route.authentication" class="code-editor" disabled />
+                <wwEditorInputCode :value="JSON.stringify(route.authentication)" class="code-editor" disabled />
             </wwEditorFormRow>
 
             <wwEditorFormRow label="Body Validation">
-                <wwEditorInputCode v-model="route.bodyValidation" class="code-editor" disabled />
+                <wwEditorInputCode :value="JSON.stringify(route.bodyValidation)" class="code-editor" disabled />
             </wwEditorFormRow>
 
             <wwEditorInputRow
@@ -107,3 +107,9 @@ export default {
     },
 };
 </script>
+
+<style>
+.code-editor {
+    max-height: 300px;
+}
+</style>
