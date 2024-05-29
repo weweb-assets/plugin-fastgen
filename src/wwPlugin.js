@@ -38,11 +38,7 @@ export default {
         try {
             const { path, headers, body } = collection.config;
 
-            const route = this.routes.find(route => route.Path === path);
-            const url = 'https://' + this.project.Subdomain + path;
-            const method = route.Method;
-
-            const responseData = await this._apiRequest(url, method, body, headers);
+            const responseData = await this._apiRequest(path, method, body, headers);
 
             return { data: responseData, error: null };
         } catch (err) {
@@ -52,11 +48,11 @@ export default {
         }
     },
 
-    async apiRequest({ url, method, body, headers }, wwUtils) {
+    async apiRequest({ path, method, body, headers }, wwUtils) {
         /* wwEditor:start */
         const payload = computePayload(method, body, headers);
         if (wwUtils) {
-            wwUtils.log('info', `Executing request ${method} on ${url}`, {
+            wwUtils.log('info', `Executing request ${method} on ${path}`, {
                 type: 'request',
                 preview: {
                     Data: payload.data,
@@ -66,10 +62,14 @@ export default {
         }
 
         /* wwEditor:end */
-        return await this._apiRequest(url, method, body, headers);
+        return await this._apiRequest(path, method, body, headers);
     },
 
-    async _apiRequest(url, method, body, headers) {
+    async _apiRequest(path, method, body, headers) {
+        const route = this.routes.find(route => route.Path === path);
+        const url = 'https://' + this.project.Subdomain + path;
+        const method = route.Method;
+
         const payload = computePayload(method, body, headers);
 
         const response = await axios({
