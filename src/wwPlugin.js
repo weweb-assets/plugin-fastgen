@@ -39,6 +39,8 @@ export default {
         Collection API
     \================================================================================================*/
     async fetchCollection(collection) {
+        console.log('🤖 Collection: ', collection);
+
         try {
             const { url, method, data, headers, queries } = collection.config;
             const responseData = await this._apiRequest(url, method, data, headers, queries);
