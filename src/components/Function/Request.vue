@@ -94,6 +94,36 @@
                     />
                 </template>
             </wwEditorInputRow>
+
+            <wwEditorInputRow
+                label="Queries"
+                type="array"
+                :model-value="queries"
+                :bindable="true"
+                @update:modelValue="setQueries"
+                @add-item="setQueries([...(route.queries || []), {}])"
+            >
+                <template #default="{ item, setItem }">
+                    <wwEditorInputRow
+                        type="query"
+                        :model-value="item.key"
+                        label="Key"
+                        placeholder="Enter a value"
+                        small
+                        :bindable="true"
+                        @update:modelValue="setItem({ ...item, key: $event })"
+                    />
+                    <wwEditorInputRow
+                        type="query"
+                        :model-value="item.value"
+                        label="Value"
+                        placeholder="Enter a value"
+                        small
+                        :bindable="true"
+                        @update:modelValue="setItem({ ...item, value: $event })"
+                    />
+                </template>
+            </wwEditorInputRow>
         </div>
     </div>
 </template>
@@ -132,6 +162,9 @@ export default {
         body() {
             return this.args.body || [];
         },
+        queries() {
+            return this.args.queries || [];
+        },
     },
     methods: {
         setRoutePath(path) {
@@ -142,6 +175,9 @@ export default {
         },
         setBody(body) {
             this.$emit('update:args', { ...this.args, body });
+        },
+        setQueries(queries) {
+            this.$emit('update:args', { ...this.args, queries });
         },
     },
 };

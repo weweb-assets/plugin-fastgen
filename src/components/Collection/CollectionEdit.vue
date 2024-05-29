@@ -94,6 +94,36 @@
                     />
                 </template>
             </wwEditorInputRow>
+
+            <wwEditorInputRow
+                label="Queries"
+                type="array"
+                :model-value="route.queries"
+                :bindable="true"
+                @update:modelValue="setProp('queries', $event)"
+                @add-item="setProp('queries', [...(route.queries || []), {}])"
+            >
+                <template #default="{ item, setItem }">
+                    <wwEditorInputRow
+                        type="query"
+                        :model-value="item.key"
+                        label="Key"
+                        placeholder="Enter a value"
+                        small
+                        :bindable="true"
+                        @update:modelValue="setItem({ ...item, key: $event })"
+                    />
+                    <wwEditorInputRow
+                        type="query"
+                        :model-value="item.value"
+                        label="Value"
+                        placeholder="Enter a value"
+                        small
+                        :bindable="true"
+                        @update:modelValue="setItem({ ...item, value: $event })"
+                    />
+                </template>
+            </wwEditorInputRow>
         </div>
     </div>
 </template>
