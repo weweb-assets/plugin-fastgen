@@ -48,7 +48,7 @@ export default {
             const url = this.project.Subdomain + path;
             const method = route.Method;
 
-            const responseData = await this._apiRequest(url, method, body, headers);
+            const responseData = await this._apiRequest(url, method, headers, body);
 
             return { data: responseData, error: null };
         } catch (err) {
@@ -76,7 +76,7 @@ export default {
         return await this._apiRequest(url, method, data, headers, params);
     },
 
-    async _apiRequest(url, method, data, headers, params) {
+    async _apiRequest(url, method, headers, body) {
         const payload = computePayload(method, data, headers, params);
 
         const response = await axios({
