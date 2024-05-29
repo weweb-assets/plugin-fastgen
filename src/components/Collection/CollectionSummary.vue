@@ -2,7 +2,7 @@
     <div class="supabase-collection-summary">
         <div class="p-2 ww-border-radius-02 border-primary">
             <div class="body-sm content-secondary">
-                <div class="flex">
+                <div class="flex flex-row">
                     <span class="p-1 mr-2 content-primary ww-border-radius-01 bg-secondary bold">
                         {{ selectedRoute.Name }}
                     </span>
