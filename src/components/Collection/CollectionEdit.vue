@@ -76,6 +76,36 @@
                     />
                 </template>
             </wwEditorInputRow>
+
+            <wwEditorInputRow
+                label="Body"
+                type="array"
+                :model-value="route.body"
+                :bindable="true"
+                @update:modelValue="setProp('body', $event)"
+                @add-item="setProp('body', [...(route.body || []), {}])"
+            >
+                <template #default="{ item, setItem }">
+                    <wwEditorInputRow
+                        type="query"
+                        :model-value="item.key"
+                        label="Key"
+                        placeholder="Enter a value"
+                        small
+                        :bindable="true"
+                        @update:modelValue="setItem({ ...item, key: $event })"
+                    />
+                    <wwEditorInputRow
+                        type="query"
+                        :model-value="item.value"
+                        label="Value"
+                        placeholder="Enter a value"
+                        small
+                        :bindable="true"
+                        @update:modelValue="setItem({ ...item, value: $event })"
+                    />
+                </template>
+            </wwEditorInputRow>
         </div>
     </div>
 </template>
@@ -105,7 +135,7 @@ export default {
             return {
                 path: null,
                 headers: [],
-                body: {},
+                body: [],
                 ...this.config,
             };
         },
