@@ -126,9 +126,6 @@ export default {
         path() {
             return this.args.path;
         },
-        method() {
-            return this.args.method;
-        },
         headers() {
             return this.args.headers || [];
         },

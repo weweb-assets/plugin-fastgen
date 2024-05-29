@@ -24,8 +24,8 @@ export default {
             isAsync: true,
             /* wwEditor:start */
             edit: () => import('./src/components/Function/Request.vue'),
-            getIsValid({ path, method }) {
-                return !!path && !!method;
+            getIsValid({ path }) {
+                return !!path;
             },
             /* wwEditor:end */
         },
