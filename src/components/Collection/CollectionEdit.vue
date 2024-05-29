@@ -12,16 +12,20 @@
         />
 
         <div v-if="route.path">
-            <div class="p-2 ww-border-radius-02 border-primary">
-                {{ route.path }}
-            </div>
-
-            <wwEditorFormRow label="Method" required>
-                <wwEditorInputText :model-value="route.method" disabled />
+            <wwEditorFormRow label="Path">
+                <div class="p-2 ww-border-radius-02 border-primary">
+                    {{ route.path }}
+                </div>
             </wwEditorFormRow>
 
             <wwEditorFormRow label="Description">
-                <wwEditorInputText :model-value="route.description" disabled />
+                <div class="p-2 ww-border-radius-02 border-primary">
+                    {{ route.description }}
+                </div>
+            </wwEditorFormRow>
+
+            <wwEditorFormRow label="Method">
+                <wwEditorInputText :model-value="route.method" disabled />
             </wwEditorFormRow>
 
             <wwEditorFormRow label="Authentication">
