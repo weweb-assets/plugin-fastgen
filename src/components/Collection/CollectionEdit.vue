@@ -25,11 +25,21 @@
             </wwEditorFormRow>
 
             <wwEditorFormRow label="Authentication">
-                <wwEditorInputCode :value="JSON.stringify(route.authentication)" class="code-editor" disabled />
+                <wwEditorInputCode
+                    :model-value="JSON.stringify(route.authentication)"
+                    class="code-editor"
+                    no-settings
+                    disabled
+                />
             </wwEditorFormRow>
 
             <wwEditorFormRow label="Body Validation">
-                <wwEditorInputCode :value="JSON.stringify(route.bodyValidation)" class="code-editor" disabled />
+                <wwEditorInputCode
+                    :model-value="JSON.stringify(route.bodyValidation)"
+                    class="code-editor"
+                    no-settings
+                    disabled
+                />
             </wwEditorFormRow>
 
             <wwEditorInputRow
