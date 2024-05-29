@@ -3,7 +3,7 @@
         <wwEditorInputRow
             type="select"
             placeholder="Select an API"
-            :model-value="route"
+            :model-value="route.path"
             :disabled="!plugin.project"
             :options="routesOptions"
             required
@@ -30,53 +30,7 @@
                 @update:modelValue="setProp('url', $event)"
             />
         </wwEditorFormRow>
-        <template v-if="isFields">
-            <wwEditorFormRow>
-                <wwEditorInputRadio
-                    :choices="dataChoices"
-                    :model-value="api.useRawBody"
-                    @update:modelValue="setProp('useRawBody', $event)"
-                />
-            </wwEditorFormRow>
-            <wwEditorInputRow
-                v-if="api.useRawBody"
-                type="query"
-                :model-value="api.data"
-                label="Body"
-                :bindable="true"
-                @update:modelValue="setProp('data', $event)"
-            />
-            <wwEditorInputRow
-                v-else
-                label="Fields"
-                type="array"
-                :model-value="api.data"
-                :bindable="true"
-                @update:modelValue="setProp('data', $event)"
-                @add-item="setProp('data', [...(api.data || []), {}])"
-            >
-                <template #default="{ item, setItem }">
-                    <wwEditorInputRow
-                        type="query"
-                        :model-value="item.key"
-                        label="Key"
-                        placeholder="Enter a value"
-                        small
-                        :bindable="true"
-                        @update:modelValue="setItem({ ...item, key: $event })"
-                    />
-                    <wwEditorInputRow
-                        type="query"
-                        :model-value="item.value"
-                        label="Value"
-                        placeholder="Enter a value"
-                        small
-                        :bindable="true"
-                        @update:modelValue="setItem({ ...item, value: $event })"
-                    />
-                </template>
-            </wwEditorInputRow>
-        </template>
+
         <wwEditorInputRow
             label="Headers"
             type="array"
@@ -158,12 +112,9 @@ export default {
         },
         route() {
             return {
-                value: null,
+                path: null,
                 ...this.config,
             };
-        },
-        isFields() {
-            return ['POST', 'PATCH'].includes(this.api.method);
         },
     },
     methods: {
