@@ -121,7 +121,7 @@ export default {
             }));
         },
         selectedRoute() {
-            return this.plugin.routes.find(route => route.Path === this.config.path) || {};
+            return this.plugin.routes.find(route => route.Path === this.path) || {};
         },
         path() {
             return this.args.path;
