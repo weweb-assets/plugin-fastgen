@@ -27,25 +27,11 @@
                 <wwEditorInputText :model-value="selectedRoute.Method" disabled />
             </wwEditorFormRow>
 
-            <wwEditorFormRow label="Authentication">
-                <!-- <wwEditorInputCode
-                    :model-value="JSON.stringify(selectedRoute.Authentication)"
-                    class="code-editor"
-                    no-settings
-                    format
-                    disabled
-                /> -->
+            <wwEditorFormRow label="Authentication" v-if="Object.keys(selectedRoute.Authentication).length">
                 <wwEditorInputPreview :value="selectedRoute.Authentication" colored formated />
             </wwEditorFormRow>
 
-            <wwEditorFormRow label="Body Validation">
-                <!-- <wwEditorInputCode
-                    :model-value="JSON.stringify(selectedRoute.BodyValidation)"
-                    class="code-editor"
-                    no-settings
-                    format
-                    disabled
-                /> -->
+            <wwEditorFormRow label="Body Validation" v-if="Object.keys(selectedRoute.BodyValidation).length">
                 <wwEditorInputPreview :value="selectedRoute.BodyValidation" colored formated />
             </wwEditorFormRow>
 
