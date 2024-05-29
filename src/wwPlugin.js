@@ -42,8 +42,13 @@ export default {
         console.log('🤖 Collection: ', collection);
 
         try {
-            const { url, method, data, headers, queries } = collection.config;
-            const responseData = await this._apiRequest(url, method, data, headers, queries);
+            const { path, headers, body } = collection.config;
+
+            const route = this.routes.find(route => route.path === path);
+            const url = this.project.Subdomain + path;
+            const method = route.Method;
+
+            const responseData = await this._apiRequest(url, method, body, headers);
 
             return { data: responseData, error: null };
         } catch (err) {
