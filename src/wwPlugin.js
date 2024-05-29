@@ -48,6 +48,8 @@ export default {
             const url = this.project.Subdomain + path;
             const method = route.Method;
 
+            console.log('🔥 _apiRequest: ', url, method, body, headers);
+
             const responseData = await this._apiRequest(url, method, body, headers);
 
             return { data: responseData, error: null };
