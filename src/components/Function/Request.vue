@@ -18,7 +18,7 @@
             </div>
 
             <wwEditorFormRow v-if="selectedRoute.Description" label="Description">
-                <div class="p-2 ww-border-radius-02 border-primary">
+                <div class="p-2 body-sm content-secondary ww-border-radius-02 border-primary">
                     {{ selectedRoute.Description }}
                 </div>
             </wwEditorFormRow>
