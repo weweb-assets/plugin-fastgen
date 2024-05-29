@@ -14,8 +14,8 @@
         <div v-if="route.path">
             <wwEditorFormRow label="Path">
                 <div class="p-2 ww-border-radius-02 border-primary">
-                    {{ route.path }} <br />
-                    <span class="body-sm content-secondary">{{ plugin.project.Subdomain + route.path }}</span>
+                    {{ route.name }} <br />
+                    <span class="body-sm content-secondary mt-1">{{ plugin.project.Subdomain + route.path }}</span>
                 </div>
             </wwEditorFormRow>
 
@@ -96,7 +96,7 @@ export default {
     computed: {
         routesOptions() {
             return this.plugin.routes.map(api => ({
-                label: api.Name,
+                label: api.Path,
                 value: api.Path,
             }));
         },
@@ -104,6 +104,7 @@ export default {
             const route = this.plugin.routes.find(route => route.Path === this.config.path) || {};
             return {
                 path: route.Path || '',
+                name: route.Name || '',
                 method: route.Method || '',
                 description: route.Description || '',
                 authentication: route.Authentication || {},
