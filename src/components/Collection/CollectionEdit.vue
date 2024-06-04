@@ -1,48 +1,47 @@
 <template>
     <div class="fastgen-api-collection-edit">
-        <wwEditorFormRow label="Method" required>
-            <wwEditorInputTextSelect
-                :options="methodOptions"
-                :model-value="api.method"
-                placeholder="Select a method"
-                @update:modelValue="setProp('method', $event)"
-            />
-        </wwEditorFormRow>
-        <wwEditorFormRow required label="URL">
-            <template #append-label>
-                <a class="ww-editor-link ml-2" href="https://app.fastgen.com/api" target="_blank"> Find it here </a>
-            </template>
-            <wwEditorInputRow
-                type="query"
-                placeholder="https://your-project.fastgenapp.com/your-path"
-                :model-value="api.url"
-                @update:modelValue="setProp('url', $event)"
-            />
-        </wwEditorFormRow>
-        <template v-if="isFields">
-            <wwEditorFormRow>
-                <wwEditorInputRadio
-                    :choices="dataChoices"
-                    :model-value="api.useRawBody"
-                    @update:modelValue="setProp('useRawBody', $event)"
-                />
+        <wwEditorInputRow
+            type="select"
+            placeholder="Select a route"
+            :model-value="route.path"
+            :disabled="!plugin.project"
+            :options="routesOptions"
+            required
+            label="Route"
+            @update:modelValue="setRoutePath"
+        />
+
+        <div v-if="selectedRoute.Name">
+            <div class="p-2 mb-4 ww-border-radius-02 border-primary">
+                {{ selectedRoute.Name }} <br />
+                <span class="body-sm content-secondary mt-1">{{ plugin.project.Subdomain + selectedRoute.Path }}</span>
+            </div>
+
+            <wwEditorFormRow v-if="selectedRoute.Description" label="Description">
+                <div class="p-2 ww-border-radius-02 border-primary">
+                    {{ selectedRoute.Description }}
+                </div>
             </wwEditorFormRow>
+
+            <wwEditorFormRow label="Method">
+                <wwEditorInputText :model-value="selectedRoute.Method" disabled />
+            </wwEditorFormRow>
+
+            <wwEditorFormRow label="Authentication" v-if="Object.keys(selectedRoute.Authentication).length">
+                <wwEditorInputPreview :value="selectedRoute.Authentication" colored formated />
+            </wwEditorFormRow>
+
+            <wwEditorFormRow label="Body Validation" v-if="Object.keys(selectedRoute.BodyValidation).length">
+                <wwEditorInputPreview :value="selectedRoute.BodyValidation" colored formated />
+            </wwEditorFormRow>
+
             <wwEditorInputRow
-                v-if="api.useRawBody"
-                type="query"
-                :model-value="api.data"
-                label="Body"
-                :bindable="true"
-                @update:modelValue="setProp('data', $event)"
-            />
-            <wwEditorInputRow
-                v-else
-                label="Fields"
+                label="Headers"
                 type="array"
-                :model-value="api.data"
+                :model-value="route.headers"
                 :bindable="true"
-                @update:modelValue="setProp('data', $event)"
-                @add-item="setProp('data', [...(api.data || []), {}])"
+                @update:modelValue="setProp('headers', $event)"
+                @add-item="setProp('headers', [...(route.headers || []), {}])"
             >
                 <template #default="{ item, setItem }">
                     <wwEditorInputRow
@@ -65,112 +64,114 @@
                     />
                 </template>
             </wwEditorInputRow>
-        </template>
-        <wwEditorInputRow
-            label="Headers"
-            type="array"
-            :model-value="api.headers"
-            :bindable="true"
-            @update:modelValue="setProp('headers', $event)"
-            @add-item="setProp('headers', [...(api.headers || []), {}])"
-        >
-            <template #default="{ item, setItem }">
-                <wwEditorInputRow
-                    type="query"
-                    :model-value="item.key"
-                    label="Key"
-                    placeholder="Enter a value"
-                    small
-                    :bindable="true"
-                    @update:modelValue="setItem({ ...item, key: $event })"
-                />
-                <wwEditorInputRow
-                    type="query"
-                    :model-value="item.value"
-                    label="Value"
-                    placeholder="Enter a value"
-                    small
-                    :bindable="true"
-                    @update:modelValue="setItem({ ...item, value: $event })"
-                />
-            </template>
-        </wwEditorInputRow>
-        <wwEditorInputRow
-            label="Query string"
-            type="array"
-            :model-value="api.queries"
-            :bindable="true"
-            @update:modelValue="setProp('queries', $event)"
-            @add-item="setProp('queries', [...(api.queries || []), {}])"
-        >
-            <template #default="{ item, setItem }">
-                <wwEditorInputRow
-                    type="query"
-                    :model-value="item.key"
-                    label="Key"
-                    placeholder="Enter a value"
-                    small
-                    :bindable="true"
-                    @update:modelValue="setItem({ ...item, key: $event })"
-                />
-                <wwEditorInputRow
-                    type="query"
-                    :model-value="item.value"
-                    label="Value"
-                    placeholder="Enter a value"
-                    small
-                    :bindable="true"
-                    @update:modelValue="setItem({ ...item, value: $event })"
-                />
-            </template>
-        </wwEditorInputRow>
+
+            <wwEditorInputRow
+                label="Body"
+                type="array"
+                :model-value="route.body"
+                :bindable="true"
+                @update:modelValue="setProp('body', $event)"
+                @add-item="setProp('body', [...(route.body || []), {}])"
+            >
+                <template #default="{ item, setItem }">
+                    <wwEditorInputRow
+                        type="query"
+                        :model-value="item.key"
+                        label="Key"
+                        placeholder="Enter a value"
+                        small
+                        :bindable="true"
+                        @update:modelValue="setItem({ ...item, key: $event })"
+                    />
+                    <wwEditorInputRow
+                        type="query"
+                        :model-value="item.value"
+                        label="Value"
+                        placeholder="Enter a value"
+                        small
+                        :bindable="true"
+                        @update:modelValue="setItem({ ...item, value: $event })"
+                    />
+                </template>
+            </wwEditorInputRow>
+
+            <wwEditorInputRow
+                label="Queries"
+                type="array"
+                :model-value="route.queries"
+                :bindable="true"
+                @update:modelValue="setProp('queries', $event)"
+                @add-item="setProp('queries', [...(route.queries || []), {}])"
+            >
+                <template #default="{ item, setItem }">
+                    <wwEditorInputRow
+                        type="query"
+                        :model-value="item.key"
+                        label="Key"
+                        placeholder="Enter a value"
+                        small
+                        :bindable="true"
+                        @update:modelValue="setItem({ ...item, key: $event })"
+                    />
+                    <wwEditorInputRow
+                        type="query"
+                        :model-value="item.value"
+                        label="Value"
+                        placeholder="Enter a value"
+                        small
+                        :bindable="true"
+                        @update:modelValue="setItem({ ...item, value: $event })"
+                    />
+                </template>
+            </wwEditorInputRow>
+        </div>
     </div>
 </template>
 
 <script>
 export default {
     props: {
+        plugin: { type: Object, required: true },
         collection: { type: Object, required: true },
         config: { type: Object, required: true },
     },
     emits: ['update:config'],
     data() {
-        return {
-            dataChoices: [
-                { label: 'Parsed fields', value: false, default: true },
-                { label: 'Raw body', value: true },
-            ],
-            methodOptions: [
-                { value: 'GET', label: 'GET', default: true },
-                { value: 'POST', label: 'POST' },
-                { value: 'PATCH', label: 'PATCH' },
-                { value: 'DELETE', label: 'DELETE' },
-            ],
-        };
+        return {};
     },
     computed: {
-        api() {
+        routesOptions() {
+            return this.plugin.routes.map(api => ({
+                label: `${api.Method} - ${api.Name}`,
+                value: api.Path,
+            }));
+        },
+        selectedRoute() {
+            return this.plugin.routes.find(route => route.Path === this.config.path) || {};
+        },
+        route() {
             return {
-                method: 'GET',
-                url: undefined,
+                path: null,
                 headers: [],
-                queries: [],
-                data: [],
-                useRawBody: false,
+                body: [],
                 ...this.config,
             };
         },
-        securedByToken() {
-            return this.args.securedByToken;
-        },
-        isFields() {
-            return ['POST', 'PATCH'].includes(this.api.method);
-        },
     },
     methods: {
+        setRoutePath(path) {
+            this.$emit('update:config', { ...this.config, path });
+        },
         setProp(key, value) {
-            this.$emit('update:config', { ...this.api, [key]: value });
+            const updatedRoute = { ...this.route, [key]: value };
+            this.$emit('update:config', updatedRoute);
         },
     },
 };
 </script>
+
+<style>
+.code-editor {
+    max-height: 200px;
+}
+</style>
