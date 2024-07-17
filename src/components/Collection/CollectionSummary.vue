@@ -1,7 +1,11 @@
 <template>
     <div class="supabase-collection-summary">
-        <div class="label-sm content-primary">API</div>
-        <div class="body-sm content-secondary truncate">{{ config.url || '-' }}</div>
+        <div class="body-sm content-secondary">
+            <span class="p-1 mr-2 content-primary ww-border-radius-01 bg-secondary bold">
+                {{ selectedRoute.Method }}
+            </span>
+            <span class="body-sm content-secondary mt-1">{{ plugin.project.Subdomain + config.path }}</span>
+        </div>
     </div>
 </template>
 
@@ -9,6 +13,12 @@
 export default {
     props: {
         config: { type: Object, required: true },
+        plugin: { type: Object, required: true },
+    },
+    computed: {
+        selectedRoute() {
+            return this.plugin.routes.find(route => route.Path === this.config.path);
+        },
     },
 };
 </script>

@@ -5,13 +5,40 @@ import './components/Collection/CollectionSummary.vue';
 /* wwEditor:end */
 
 export default {
+    websiteId: null,
+    project: null,
+    routes: [],
+    async onLoad(settings) {
+        this.websiteId = wwLib.wwWebsiteData.getInfo()?.id;
+        /* wwEditor:start */
+        if (settings.privateData.integrationToken) {
+            this.fetchProject();
+            this.fetchRoutes();
+        }
+        /* wwEditor:end */
+    },
+    async fetchProject() {
+        const response = await wwAxios.get(
+            `${wwLib.wwApiRequests._getPluginsUrl()}/designs/${this.websiteId}/fastgen/project`
+        );
+
+        this.project = response.data.data;
+    },
+    async fetchRoutes() {
+        const response = await wwAxios.get(
+            `${wwLib.wwApiRequests._getPluginsUrl()}/designs/${this.websiteId}/fastgen/project/routes`
+        );
+
+        this.routes = response.data.data;
+    },
     /*=============================================m_ÔÔ_m=============================================\
         Collection API
     \================================================================================================*/
     async fetchCollection(collection) {
         try {
-            const { url, method, data, headers, queries } = collection.config;
-            const responseData = await this._apiRequest(url, method, data, headers, queries);
+            const { path, headers, body, queries } = collection.config;
+
+            const responseData = await this._apiRequest(path, body, headers, queries);
 
             return { data: responseData, error: null };
         } catch (err) {
@@ -21,33 +48,39 @@ export default {
         }
     },
 
-    async apiRequest({ url, method, data, headers, queries: params }, wwUtils) {
+    async apiRequest({ path, body, headers, queries }, wwUtils) {
         /* wwEditor:start */
-        const payload = computePayload(method, data, headers, params);
+        const route = this.routes.find(route => route.Path === path);
+        const method = route.Method;
+
+        const payload = computePayload(method, body, headers, queries);
         if (wwUtils) {
-            wwUtils.log('info', `Executing request ${method} on ${url}`, {
+            wwUtils.log('info', `Executing request ${method} on ${path}`, {
                 type: 'request',
                 preview: {
                     Data: payload.data,
                     Headers: payload.headers,
-                    'Query string': payload.params,
                 },
             });
         }
 
         /* wwEditor:end */
-        return await this._apiRequest(url, method, data, headers, params);
+        return await this._apiRequest(path, body, headers, queries);
     },
 
-    async _apiRequest(url, method, data, headers, params) {
-        const payload = computePayload(method, data, headers, params);
+    async _apiRequest(path, body, headers, queries) {
+        const url = 'https://' + this.project.Subdomain + path;
+        const route = this.routes.find(route => route.Path === path);
+        const method = route.Method;
+
+        const payload = computePayload(method, body, headers, queries);
 
         const response = await axios({
             url,
             method,
             data: payload.data,
-            params: payload.params,
             headers: payload.headers,
+            params: payload.params,
         });
 
         return response.data;
