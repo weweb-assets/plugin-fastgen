@@ -19,7 +19,7 @@ export default {
     },
     async fetchProject() {
         const response = await wwAxios.get(
-            `http://127.0.0.1:3150/designs/${this.websiteId}/fastgen/project/datasource`
+            `${wwLib.wwApiRequests._getPluginsUrl()}/designs/${this.websiteId}/fastgen/datasource/project/`
         );
 
         this.project = response.data.data;
