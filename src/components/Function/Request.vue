@@ -147,7 +147,7 @@ export default {
         routesOptions() {
             return this.plugin.routes.map(api => ({
                 label: `${api.Method} - ${api.Name}`,
-                value: api.Path,
+                value: `${api.Method}-${api.Path}`,
             }));
         },
         selectedRoute() {

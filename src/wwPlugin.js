@@ -12,8 +12,8 @@ export default {
         this.websiteId = wwLib.wwWebsiteData.getInfo()?.id;
         /* wwEditor:start */
         if (settings.privateData.integrationToken) {
-            this.fetchProject();
-            this.fetchRoutes();
+            await this.fetchProject();
+            await this.fetchRoutes();
         }
         /* wwEditor:end */
     },
