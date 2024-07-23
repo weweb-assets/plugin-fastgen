@@ -1,15 +1,22 @@
 <template>
     <div class="fastgen-api-collection-edit">
-        <wwEditorInputRow
-            type="select"
-            placeholder="Select a route"
-            :model-value="route.path"
-            :disabled="!plugin.project"
-            :options="routesOptions"
-            required
-            label="Route"
-            @update:modelValue="setRoutePath"
-        />
+        <wwEditorFormRow label="Route" required>
+            <div class="flex items-center">
+                <wwEditorInputTextSelect
+                    class="w-100"
+                    placeholder="Select a route"
+                    :model-value="route.path"
+                    :disabled="!plugin.project"
+                    :options="routesOptions"
+                    required
+                    label="Route"
+                    @update:modelValue="setRoutePath"
+                />
+                <button type="button" class="ww-editor-button -secondary -small -icon ml-2" @click="refreshRoutes">
+                    <wwEditorIcon name="refresh" medium />
+                </button>
+            </div>
+        </wwEditorFormRow>
 
         <div v-if="selectedRoute.Name">
             <div class="p-2 mb-4 ww-border-radius-02 border-primary">
@@ -165,6 +172,9 @@ export default {
         setProp(key, value) {
             const updatedRoute = { ...this.route, [key]: value };
             this.$emit('update:config', updatedRoute);
+        },
+        refreshRoutes() {
+            this.plugin.getRoutes();
         },
     },
 };
