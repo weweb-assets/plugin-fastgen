@@ -12,7 +12,7 @@
                     label="Route"
                     @update:modelValue="setRoutePath"
                 />
-                <button type="button" class="ww-editor-button -secondary -small -icon ml-2" @click="refreshRoutes">
+                <button type="button" class="ww-editor-button -secondary -small -icon ml-2" @click="fetchRoutes">
                     <wwEditorIcon name="refresh" medium />
                 </button>
             </div>
@@ -173,8 +173,8 @@ export default {
             const updatedRoute = { ...this.route, [key]: value };
             this.$emit('update:config', updatedRoute);
         },
-        refreshRoutes() {
-            this.plugin.getRoutes();
+        fetchRoutes() {
+            this.plugin.fetchRoutes();
         },
     },
 };
