@@ -73,13 +73,13 @@
             </wwEditorInputRow>
 
             <wwEditorInputRow
+                v-if="shouldHaveBody"
                 label="Body"
                 type="array"
                 :model-value="route.body"
                 :bindable="true"
                 @update:modelValue="setProp('body', $event)"
                 @add-item="setProp('body', [...(route.body || []), {}])"
-                v-if="shouldHaveBody"
             >
                 <template #default="{ item, setItem }">
                     <wwEditorInputRow

@@ -6,7 +6,7 @@
                     class="w-100"
                     placeholder="Select a route"
                     :disabled="!plugin.project"
-                    :model-value="selectedRoute?.Name"
+                    :model-value="selectedRoute.Name"
                     :options="routesOptions"
                     required
                     label="Route"
@@ -18,13 +18,9 @@
             </div>
         </wwEditorFormRow>
 
-        selectedRoute: {{ selectedRoute }}
-
-        Arguments: {{ args }}
-
-        <div v-if="selectedRoute?.Name">
+        <div v-if="selectedRoute.Name">
             <div class="p-2 mb-4 ww-border-radius-02 border-primary">
-                {{ selectedRoute?.Name }} <br />
+                {{ selectedRoute.Name }} <br />
                 <span class="body-sm content-secondary mt-1">{{ project?.Subdomain || '' + selectedRoute.Path }}</span>
             </div>
 
@@ -77,6 +73,7 @@
             </wwEditorInputRow>
 
             <wwEditorInputRow
+                v-if="shouldHaveBody"
                 label="Body"
                 type="array"
                 :model-value="body"
@@ -140,7 +137,7 @@
 </template>
 
 <script>
-import { computed, watch } from 'vue';
+import { computed } from 'vue';
 import useFastgenInstance from '../../useFastgenInstance';
 
 export default {
@@ -159,18 +156,8 @@ export default {
             }));
         });
 
-        console.log('👾 routes', routes);
-
         const selectedRoute = computed(() => {
-            routes.value.find(route => route.Path === props.args.path && route.Name === props.args.name) || {};
-        });
-
-        watch(selectedRoute, () => {
-            console.log('👾 selectedRoute', selectedRoute.value);
-        });
-
-        watch(props.args, () => {
-            console.log('👾 args', props.args);
+            return routes.value.find(route => route.Path === props.args.path && route.Name === props.args.name) || {};
         });
 
         const route = computed(() => {
@@ -184,20 +171,23 @@ export default {
             };
         });
 
+        const shouldHaveBody = computed(() => {
+            return selectedRoute.value.Method === 'POST' || selectedRoute.value.Method === 'PATCH';
+        });
+
         return {
             fetchRoutes,
             routesOptions,
             selectedRoute,
             routes,
             route,
+            shouldHaveBody,
         };
     },
     methods: {
         setRoutePath(name) {
             const path = this.routes.find(route => route.Name === name)?.Path;
-            console.log('👾 setRoutePath', this.args);
             this.$emit('update:args', { ...this.args, path, name });
-            console.log('👾 setRoutePath After', this.args);
         },
         setHeaders(headers) {
             this.$emit('update:args', { ...this.args, headers });
