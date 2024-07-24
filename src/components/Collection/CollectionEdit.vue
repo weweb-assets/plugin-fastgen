@@ -21,7 +21,7 @@
         <div v-if="selectedRoute.Name">
             <div class="p-2 mb-4 ww-border-radius-02 border-primary">
                 {{ selectedRoute.Name }} <br />
-                <span class="body-sm content-secondary mt-1">{{ plugin.project.Subdomain + selectedRoute.Path }}</span>
+                <span class="body-sm content-secondary mt-1">{{ project?.Subdomain || '' + selectedRoute.Path }}</span>
             </div>
 
             <wwEditorFormRow v-if="selectedRoute.Description" label="Description">
@@ -136,6 +136,9 @@
 </template>
 
 <script>
+import { computed } from 'vue';
+import useFastgenInstance from '../../useFastgenInstance';
+
 export default {
     props: {
         plugin: { type: Object, required: true },
@@ -143,35 +146,45 @@ export default {
         config: { type: Object, required: true },
     },
     emits: ['update:config'],
-    data() {
-        return {};
-    },
-    computed: {
-        routesOptions() {
-            return this.plugin.routes.map(api => ({
+    setup(props) {
+        const { routes, fetchRoutes } = useFastgenInstance();
+
+        console.log('routes', routes);
+
+        const routesOptions = computed(() => {
+            return routes.value.map(api => ({
                 label: api.Name,
                 value: api.Name,
             }));
-        },
-        selectedRoute() {
+        });
+
+        const selectedRoute = computed(() => {
             return (
-                this.plugin.routes.find(route => route.Path === this.config.path && route.Name === this.config.name) ||
-                {}
+                routes.value.find(route => route.Path === props.config.path && route.Name === props.config.name) || {}
             );
-        },
-        route() {
+        });
+
+        const route = computed(() => {
             return {
                 path: null,
                 name: null,
                 headers: [],
                 body: [],
-                ...this.config,
+                ...props.config,
             };
-        },
+        });
+
+        return {
+            fetchRoutes,
+            routesOptions,
+            selectedRoute,
+            routes,
+            route,
+        };
     },
     methods: {
         setRoutePath(name) {
-            const path = this.plugin.routes.find(route => route.Name === name)?.Path;
+            const path = this.routes.find(route => route.Name === name)?.Path;
             this.$emit('update:config', { ...this.config, path, name });
         },
         setProp(key, value) {
@@ -179,7 +192,7 @@ export default {
             this.$emit('update:config', updatedRoute);
         },
         fetchRoutes() {
-            this.plugin.fetchRoutes();
+            this.fetchRoutes();
             this.setRoutePath('');
         },
     },

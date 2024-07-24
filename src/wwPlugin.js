@@ -4,39 +4,21 @@ import './components/Collection/CollectionEdit.vue';
 import './components/Collection/CollectionSummary.vue';
 /* wwEditor:end */
 
+import useFastgenInstance from './useFastgenInstance';
+
 export default {
-    websiteId: null,
-    project: null,
-    routes: [],
+    fastgenInstance: null,
     async onLoad(settings) {
-        this.websiteId = wwLib.wwWebsiteData.getInfo()?.id;
         /* wwEditor:start */
         if (settings.privateData.integrationToken) {
-            await this.fetchProject();
-            await this.fetchRoutes();
-
-            console.log('Project:', this.project, this.routes);
+            this.fastgenInstance = useFastgenInstance();
         }
         /* wwEditor:end */
-    },
-    async fetchProject() {
-        const response = await wwAxios.get(
-            `${wwLib.wwApiRequests._getPluginsUrl()}/designs/${this.websiteId}/fastgen/datasource/project`
-        );
-
-        this.project = response.data.data;
-    },
-    async fetchRoutes() {
-        const response = await wwAxios.get(
-            `${wwLib.wwApiRequests._getPluginsUrl()}/designs/${this.websiteId}/fastgen/project/routes`
-        );
-
-        this.routes = response.data.data;
     },
     /*=============================================m_ÔÔ_m=============================================\
         Collection API
     \================================================================================================*/
-    async fetchCollection(collection) {
+    async _fetchCollection(collection) {
         try {
             const { path, headers, body, queries } = collection.config;
 

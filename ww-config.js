@@ -18,7 +18,6 @@ export default {
                 return !!config.path;
             },
             modes: ['dynamic'],
-            onSave: 'onLoad',
         },
     },
     actions: [

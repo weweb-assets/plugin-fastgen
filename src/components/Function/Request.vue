@@ -1,20 +1,25 @@
 <template>
     <div class="fastgen-api-collection-edit">
-        <wwEditorInputRow
-            type="select"
-            placeholder="Select a route"
-            :model-value="path"
-            :disabled="!plugin.project"
-            :options="routesOptions"
-            required
-            label="Route"
-            @update:modelValue="setRoutePath"
-        />
+        <div class="flex items-center mb-4">
+            <wwEditorInputRow
+                type="select"
+                placeholder="Select a route"
+                :model-value="selectedRoute.Name"
+                :disabled="!plugin.project"
+                :options="routesOptions"
+                required
+                label="Route"
+                @update:modelValue="setRoutePath"
+            />
+            <button type="button" class="ww-editor-button -secondary -small -icon ml-2" @click="fetchRoutes">
+                <wwEditorIcon name="refresh" medium />
+            </button>
+        </div>
 
         <div v-if="selectedRoute.Name">
             <div class="p-2 mb-4 ww-border-radius-02 border-primary">
                 {{ selectedRoute.Name }} <br />
-                <span class="body-sm content-secondary mt-1">{{ plugin.project.Subdomain + selectedRoute.Path }}</span>
+                <span class="body-sm content-secondary mt-1">{{ project?.Subdomain || '' + selectedRoute.Path }}</span>
             </div>
 
             <wwEditorFormRow v-if="selectedRoute.Description" label="Description">
@@ -101,7 +106,7 @@
                 :model-value="queries"
                 :bindable="true"
                 @update:modelValue="setQueries"
-                @add-item="setQueries([...(route.queries || []), {}])"
+                @add-item="setQueries([...(queries || []), {}])"
             >
                 <template #default="{ item, setItem }">
                     <wwEditorInputRow
@@ -129,6 +134,9 @@
 </template>
 
 <script>
+import { computed } from 'vue';
+import useFastgenInstance from '../../useFastgenInstance';
+
 export default {
     props: {
         plugin: { type: Object, required: true },
@@ -139,36 +147,47 @@ export default {
                 path: null,
                 body: [],
                 headers: [],
+                queries: [],
             }),
         },
     },
     emits: ['update:args'],
-    computed: {
-        routesOptions() {
-            return this.plugin.routes.map(api => ({
-                label: `${api.Method} - ${api.Name}`,
-                value: api.Path,
+    setup(props) {
+        const { routes, fetchRoutes } = useFastgenInstance();
+
+        const routesOptions = computed(() => {
+            return routes.value.map(api => ({
+                label: api.Name,
+                value: api.Name,
             }));
-        },
-        selectedRoute() {
-            return this.plugin.routes.find(route => route.Path === this.path) || {};
-        },
-        path() {
-            return this.args.path;
-        },
-        headers() {
-            return this.args.headers || [];
-        },
-        body() {
-            return this.args.body || [];
-        },
-        queries() {
-            return this.args.queries || [];
-        },
+        });
+
+        const selectedRoute = computed(() => {
+            return routes.value.find(route => route.Path === props.args.path) || {};
+        });
+
+        const route = computed(() => {
+            return {
+                path: null,
+                headers: [],
+                body: [],
+                queries: [],
+                ...props.args,
+            };
+        });
+
+        return {
+            fetchRoutes,
+            routesOptions,
+            selectedRoute,
+            routes,
+            route,
+        };
     },
     methods: {
-        setRoutePath(path) {
-            this.$emit('update:args', { ...this.args, path });
+        setRoutePath(name) {
+            const path = this.routes.find(route => route.Name === name)?.Path;
+            this.$emit('update:args', { ...this.args, path, name });
         },
         setHeaders(headers) {
             this.$emit('update:args', { ...this.args, headers });
@@ -179,6 +198,15 @@ export default {
         setQueries(queries) {
             this.$emit('update:args', { ...this.args, queries });
         },
+        fetchRoutes() {
+            this.fetchRoutes();
+        },
     },
 };
 </script>
+
+<style>
+.code-editor {
+    max-height: 200px;
+}
+</style>
