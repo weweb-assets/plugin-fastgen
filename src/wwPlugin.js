@@ -69,33 +69,20 @@ export default {
         console.log('✅ apiRequest', url, 'with method', method, 'and payload', {
             url,
             method,
-            params,
-            data: body,
+            params: computeList(params),
+            data: computeList(body),
             headers: buildFastgenHeaders({ authToken, dataType }, headers),
         });
 
         return await axios({
             url,
             method,
-            params,
-            data: body,
+            params: computeList(params),
+            data: computeList(body),
             headers: buildFastgenHeaders({ authToken, dataType }, headers),
         });
     },
 };
-
-function computePayload(_, data, headers, params) {
-    data = computeList(data);
-
-    return {
-        data,
-        params: computeList(params),
-        headers: {
-            'content-type': 'application/json',
-            ...computeList(headers),
-        },
-    };
-}
 
 function computeList(list) {
     return (list || []).reduce((obj, item) => ({ ...obj, [item.key]: item.value }), {});
@@ -104,7 +91,7 @@ function computeList(list) {
 function buildFastgenHeaders({ authToken, dataType }, customHeaders = []) {
     return {
         ...(authToken ? { Authorization: `Bearer ${authToken}` } : {}),
-        ...(dataType ? { 'Content-Type': dataType } : {}),
+        ...(dataType ? { 'Content-Type': dataType || 'application/json' } : {}),
         ...(Array.isArray(customHeaders) ? customHeaders : [])
             .filter(header => !!header && !!header.key)
             .reduce((curr, next) => ({ ...curr, [next.key]: next.value }), {}),
