@@ -79,7 +79,7 @@ export default {
         const response = await axios({
             url,
             method,
-            data: payload.data,
+            // data: payload.data,
             body: payload.data,
             headers: payload.headers,
             params: payload.params,
