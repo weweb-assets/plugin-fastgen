@@ -62,6 +62,8 @@ export default {
 
         const payload = computePayload(method, body, headers, queries);
 
+        console.log('✅ apiRequest', url, 'with method', method, 'and payload', payload);
+
         const response = await axios({
             url,
             method,
