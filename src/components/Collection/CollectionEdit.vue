@@ -19,10 +19,6 @@
         </wwEditorFormRow>
 
         <div>
-            {{ selectedRoute }}
-        </div>
-
-        <div>
             {{ routesOptions }}
         </div>
 
@@ -162,24 +158,22 @@ export default {
             }));
         },
         selectedValue() {
-            return `${this.config.method}-${this.config.name}-${this.config.path}`;
+            return `${this.config.routeInfo.method}-${this.config.routeInfo.name}-${this.config.routeInfo.path}`;
         },
         selectedRoute() {
             return (
                 this.plugin.routes.find(
                     route =>
-                        route.Method === this.config.method &&
-                        route.Path === this.config.path &&
-                        route.Name === this.config.name
+                        route.Method === this.config.routeInfo.method &&
+                        route.Path === this.config.routeInfo.path &&
+                        route.Name === this.config.routeInfo.name
                 ) || {}
             );
         },
         route() {
             const [method, name, path] = (this.config.path || '').split('-');
             return {
-                method,
-                path,
-                name,
+                routeInfo: { method, path, name },
                 headers: [],
                 body: [],
                 ...this.config,
@@ -189,8 +183,7 @@ export default {
     methods: {
         setRouteInfo(value) {
             const [method, name, path] = (value || '').split('-');
-            console.log('setRouteInfo', method, name, path);
-            this.$emit('update:config', { ...this.config, method, path, name });
+            this.$emit('update:config', { ...this.config, routeInfo: { method, path, name } });
         },
         setProp(key, value) {
             const updatedRoute = { ...this.route, [key]: value };

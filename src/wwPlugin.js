@@ -14,6 +14,8 @@ export default {
         if (settings.privateData.integrationToken) {
             await this.fetchProject();
             await this.fetchRoutes();
+
+            console.log('Project:', this.project, this.routes);
         }
         /* wwEditor:end */
     },
