@@ -34,12 +34,22 @@
 </template>
 
 <script>
+import useFastgenInstance from '../useFastgenInstance';
+
 export default {
     props: {
         plugin: { type: Object, required: true },
         settings: { type: Object, required: true },
     },
     emits: ['update:settings'],
+    setup() {
+        const { fetchProject, fetchRoutes } = useFastgenInstance();
+
+        return {
+            fetchProject,
+            fetchRoutes,
+        };
+    },
     data() {
         return {
             isKeyVisible: false,
@@ -49,8 +59,8 @@ export default {
     watch: {
         async 'settings.privateData.integrationToken'(value) {
             if (value) {
-                this.plugin.fetchProject();
-                this.plugin.fetchRoutes();
+                this.fetchProject();
+                this.fetchRoutes();
             } else {
                 wwLib.wwNotification.open({
                     text: 'Your integration token seems to be invalid. Please enter a valid token.',
@@ -64,12 +74,6 @@ export default {
             this.$emit('update:settings', {
                 ...this.settings,
                 privateData: { ...this.settings.privateData, integrationToken },
-            });
-        },
-        async changeProject(project) {
-            this.$emit('update:settings', {
-                ...this.settings,
-                privateData: { ...this.settings.privateData, project },
             });
         },
     },
