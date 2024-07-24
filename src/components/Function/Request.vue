@@ -45,7 +45,7 @@
             <wwEditorInputRow
                 label="Headers"
                 type="array"
-                :model-value="headers"
+                :model-value="route.headers"
                 :bindable="true"
                 @update:modelValue="setHeaders"
                 @add-item="setHeaders([...(headers || []), {}])"
@@ -76,7 +76,7 @@
                 v-if="shouldHaveBody"
                 label="Body"
                 type="array"
-                :model-value="body"
+                :model-value="route.body"
                 :bindable="true"
                 @update:modelValue="setBody"
                 @add-item="setBody([...(body || []), {}])"
@@ -106,7 +106,7 @@
             <wwEditorInputRow
                 label="Queries"
                 type="array"
-                :model-value="queries"
+                :model-value="route.queries"
                 :bindable="true"
                 @update:modelValue="setQueries"
                 @add-item="setQueries([...(queries || []), {}])"
