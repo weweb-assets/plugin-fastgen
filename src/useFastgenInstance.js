@@ -3,7 +3,7 @@ import { ref } from 'vue';
 const PROJECT = ref(null);
 const ROUTES = ref([]);
 
-export const useFastgenInstance = () => {
+export default () => {
     const websiteId = wwLib.wwWebsiteData.getInfo()?.id;
 
     async function fetchProject() {
