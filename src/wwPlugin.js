@@ -60,18 +60,6 @@ export default {
         const route = this.fastgenInstance.routes.value.find(route => route.Path === path);
         const method = route.Method;
 
-        console.log(
-            '✅ _apiRequest',
-            url,
-            'with method',
-            method,
-            'and body',
-            body,
-            'and headers',
-            headers,
-            'and queries',
-            queries
-        );
         const payload = computePayload(method, body, headers, queries);
 
         console.log('✅ apiRequest', url, 'with method', method, 'and payload', payload);
@@ -79,8 +67,7 @@ export default {
         const response = await axios({
             url,
             method,
-            // data: payload.data,
-            body: payload.data,
+            data: payload.data,
             headers: payload.headers,
             params: payload.params,
         });
