@@ -102,7 +102,7 @@ export default {
 function computePayload(method, data, headers, params, dataType, useRawBody) {
     if (!useRawBody) {
         data = computeList(data);
-        console.log('✅ data in computePayload', data);
+        console.log('✅ data 1', data);
 
         switch (dataType) {
             case 'application/x-www-form-urlencoded': {
@@ -120,6 +120,8 @@ function computePayload(method, data, headers, params, dataType, useRawBody) {
         }
     }
 
+    console.log('✅ data 2', data);
+
     switch (method) {
         case 'GET':
         case 'DELETE':
@@ -129,7 +131,7 @@ function computePayload(method, data, headers, params, dataType, useRawBody) {
             break;
     }
 
-    console.log('✅ computePayload', { data, headers, params });
+    console.log('✅ data 3', data);
 
     return {
         data,
