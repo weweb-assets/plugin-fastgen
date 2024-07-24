@@ -60,6 +60,18 @@ export default {
         const route = this.fastgenInstance.routes.value.find(route => route.Path === path);
         const method = route.Method;
 
+        console.log(
+            '✅ _apiRequest',
+            url,
+            'with method',
+            method,
+            'and body',
+            body,
+            'and headers',
+            headers,
+            'and queries',
+            queries
+        );
         const payload = computePayload(method, body, headers, queries);
 
         console.log('✅ apiRequest', url, 'with method', method, 'and payload', payload);
@@ -90,6 +102,7 @@ export default {
 function computePayload(method, data, headers, params, dataType, useRawBody) {
     if (!useRawBody) {
         data = computeList(data);
+        console.log('✅ data in computePayload', data);
 
         switch (dataType) {
             case 'application/x-www-form-urlencoded': {
