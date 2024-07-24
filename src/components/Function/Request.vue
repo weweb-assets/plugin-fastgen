@@ -2,6 +2,7 @@
     <div class="fastgen-api-collection-edit">
         <div class="flex items-center mb-4">
             <wwEditorInputRow
+                class="w-100"
                 type="select"
                 placeholder="Select a route"
                 :model-value="selectedRoute.Name"
@@ -163,7 +164,7 @@ export default {
         });
 
         const selectedRoute = computed(() => {
-            return routes.value.find(route => route.Path === props.args.path) || {};
+            routes.value.find(route => route.Path === props.arg.path && route.Name === props.arg.name) || {};
         });
 
         const route = computed(() => {
