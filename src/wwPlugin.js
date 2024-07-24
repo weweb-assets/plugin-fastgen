@@ -116,6 +116,8 @@ function computePayload(method, data, headers, params, dataType, useRawBody) {
             break;
     }
 
+    console.log('✅ computePayload', { data, headers, params });
+
     return {
         data,
         params: computeList(params),
