@@ -85,6 +85,7 @@ export default {
 };
 
 function computeList(list) {
+    console.log('✅ computeList', list);
     return (list || []).reduce((obj, item) => ({ ...obj, [item.key]: item.value }), {});
 }
 
