@@ -79,6 +79,7 @@
                 :bindable="true"
                 @update:modelValue="setProp('body', $event)"
                 @add-item="setProp('body', [...(route.body || []), {}])"
+                v-if="shouldHaveBody"
             >
                 <template #default="{ item, setItem }">
                     <wwEditorInputRow
@@ -172,12 +173,17 @@ export default {
             };
         });
 
+        const shouldHaveBody = computed(() => {
+            return selectedRoute.Method === 'POST' || selectedRoute.Method === 'PATCH';
+        });
+
         return {
             fetchRoutes,
             routesOptions,
             selectedRoute,
             routes,
             route,
+            shouldHaveBody,
         };
     },
     methods: {

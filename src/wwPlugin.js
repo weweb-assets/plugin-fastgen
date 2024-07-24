@@ -48,11 +48,13 @@ export default {
             preview: body,
         });
 
+        const shouldHaveBody = ['POST', 'PATCH'].includes(method);
+
         console.log('✅ Request', url, 'with method', method, 'and payload', {
             url,
             method,
             params: computeList(queries),
-            data: computeList(body),
+            data: shouldHaveBody ? computeList(body) : null,
             headers: buildFastgenHeaders({ authToken, dataType }, headers),
         });
 
@@ -60,7 +62,7 @@ export default {
             url,
             method,
             params: computeList(queries),
-            data: computeList(body),
+            data: shouldHaveBody ? computeList(body) : null,
             headers: buildFastgenHeaders({ authToken, dataType }, headers),
         });
     },
