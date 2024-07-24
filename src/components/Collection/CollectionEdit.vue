@@ -174,7 +174,7 @@ export default {
         });
 
         const shouldHaveBody = computed(() => {
-            return selectedRoute.Method === 'POST' || selectedRoute.Method === 'PATCH';
+            return selectedRoute.value.Method === 'POST' || selectedRoute.value.Method === 'PATCH';
         });
 
         return {
