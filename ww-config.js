@@ -23,7 +23,7 @@ export default {
     actions: [
         {
             name: 'Request',
-            code: 'apiRequest',
+            code: 'request',
             isAsync: true,
             /* wwEditor:start */
             edit: () => import('./src/components/Function/Request.vue'),

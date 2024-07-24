@@ -23,11 +23,8 @@ export default {
     \================================================================================================*/
     async _fetchCollection(collection) {
         try {
-            const { path, headers, body, queries } = collection.config;
-
-            const responseData = await this._apiRequest(path, body, headers, queries);
-
-            return { data: responseData, error: null };
+            const { data } = await this.request(collection.config);
+            return { data, error: null };
         } catch (err) {
             return {
                 error: Object.getOwnPropertyNames(err).reduce((obj, key) => ({ ...obj, [key]: err[key] }), {}),
@@ -35,56 +32,51 @@ export default {
         }
     },
 
-    async apiRequest({ path, body, headers, queries }, wwUtils) {
-        /* wwEditor:start */
-        const route = this.fastgenInstance.routes.value.find(route => route.Path === path);
-        const method = route.Method;
+    // async apiRequest(path, body, headers, queries) {
+    //     const url = 'https://' + this.fastgenInstance.project.value.Subdomain + path;
+    //     const route = this.fastgenInstance.routes.value.find(route => route.Path === path);
+    //     const method = route.Method;
 
-        const payload = computePayload(method, body, headers, queries);
-        if (wwUtils) {
-            wwUtils.log('info', `Executing request ${method} on ${path}`, {
-                type: 'request',
-                preview: {
-                    Data: payload.data,
-                    Headers: payload.headers,
-                },
-            });
-        }
+    //     const payload = computePayload(method, body, headers, queries);
 
-        /* wwEditor:end */
-        return await this._apiRequest(path, body, headers, queries);
-    },
+    //     console.log('✅ apiRequest', url, 'with method', method, 'and payload', payload);
 
-    async _apiRequest(path, body, headers, queries) {
+    //     const response = await axios({
+    //         url,
+    //         method,
+    //         data: payload.data,
+    //         headers: payload.headers,
+    //         params: payload.params,
+    //     });
+
+    //     return response.data;
+    // },
+
+    async request({ path, headers, params, body, dataType }, wwUtils) {
+        const authToken = wwLib.wwPlugins.fastgenAuth && wwLib.wwPlugins.fastgenAuth.authToken;
+
         const url = 'https://' + this.fastgenInstance.project.value.Subdomain + path;
         const route = this.fastgenInstance.routes.value.find(route => route.Path === path);
         const method = route.Method;
 
-        const payload = computePayload(method, body, headers, queries);
+        for (const key in params) url = url.replace(`{${key}}`, params[key]);
+
+        wwUtils?.log('info', `[Fastgen] Requesting ${method.toUpperCase()} - ${url}`, {
+            type: 'request',
+            preview: body,
+        });
 
         console.log('✅ apiRequest', url, 'with method', method, 'and payload', payload);
 
-        const response = await axios({
+        return await axios({
             url,
             method,
-            data: payload.data,
-            headers: payload.headers,
-            params: payload.params,
+            params,
+            data: body,
+            headers: buildFastgenHeaders({ authToken, dataType }, headers),
+            withCredentials: this.settings.publicData.withCredentials || withCredentials,
         });
-
-        return response.data;
     },
-
-    /* wwEditor:start */
-    getCollectionErrorDetails(collection) {
-        return (
-            collection.error &&
-            collection.error.message &&
-            collection.error.message === 'Network Error' &&
-            '⚠️ There is a network error. That can happen when the server you are trying to call is down, or it is not found, or there is a CORS issue because the server expects a call from another server and not a frontend like WeWeb.'
-        );
-    },
-    /* wwEditor:end */
 };
 
 function computePayload(_, data, headers, params) {
@@ -102,4 +94,28 @@ function computePayload(_, data, headers, params) {
 
 function computeList(list) {
     return (list || []).reduce((obj, item) => ({ ...obj, [item.key]: item.value }), {});
+}
+
+function buildFastgenHeaders(
+    {
+        xDataSource = getCurrentDataSource(),
+        xBranch = getCurrentBranch(),
+        authToken,
+        dataType,
+        globalHeaders = getGlobalHeaders(),
+    },
+    customHeaders = []
+) {
+    return {
+        ...(xDataSource ? { 'X-Data-Source': xDataSource } : {}),
+        ...(xBranch ? { 'X-Branch': xBranch } : {}),
+        ...(authToken ? { Authorization: `Bearer ${authToken}` } : {}),
+        ...(dataType ? { 'Content-Type': dataType } : {}),
+        ...(Array.isArray(globalHeaders) ? globalHeaders : [])
+            .filter(header => !!header && !!header.key)
+            .reduce((curr, next) => ({ ...curr, [next.key]: next.value }), {}),
+        ...(Array.isArray(customHeaders) ? customHeaders : [])
+            .filter(header => !!header && !!header.key)
+            .reduce((curr, next) => ({ ...curr, [next.key]: next.value }), {}),
+    };
 }
