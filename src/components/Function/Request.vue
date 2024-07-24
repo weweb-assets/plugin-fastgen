@@ -1,20 +1,15 @@
 <template>
     <div class="fastgen-api-collection-edit">
-        <div class="flex items-center mb-4">
-            <wwEditorInputRow
-                type="select"
-                placeholder="Select a route"
-                :model-value="selectedValue"
-                :disabled="!plugin.project"
-                :options="routesOptions"
-                required
-                label="Route"
-                @update:modelValue="setRouteInfo"
-            />
-            <button type="button" class="ww-editor-button -secondary -small -icon ml-2" @click="fetchRoutes">
-                <wwEditorIcon name="refresh" medium />
-            </button>
-        </div>
+        <wwEditorInputRow
+            type="select"
+            placeholder="Select a route"
+            :model-value="path"
+            :disabled="!plugin.project"
+            :options="routesOptions"
+            required
+            label="Route"
+            @update:modelValue="setRoutePath"
+        />
 
         <div v-if="selectedRoute.Name">
             <div class="p-2 mb-4 ww-border-radius-02 border-primary">
@@ -106,7 +101,7 @@
                 :model-value="queries"
                 :bindable="true"
                 @update:modelValue="setQueries"
-                @add-item="setQueries([...(queries || []), {}])"
+                @add-item="setQueries([...(route.queries || []), {}])"
             >
                 <template #default="{ item, setItem }">
                     <wwEditorInputRow
@@ -141,14 +136,9 @@ export default {
         args: {
             type: Object,
             default: () => ({
-                routeInfo: {
-                    path: null,
-                    method: null,
-                    name: null,
-                },
+                path: null,
                 body: [],
                 headers: [],
-                queries: [],
             }),
         },
     },
@@ -157,24 +147,14 @@ export default {
         routesOptions() {
             return this.plugin.routes.map(api => ({
                 label: `${api.Method} - ${api.Name}`,
-                value: `${api.Method}-${api.Name}-${api.Path}`,
+                value: api.Path,
             }));
         },
-        selectedValue() {
-            return `${this.args.routeInfo.method}-${this.args.routeInfo.name}-${this.args.routeInfo.path}`;
-        },
         selectedRoute() {
-            return (
-                this.plugin.routes.find(
-                    route =>
-                        route.Method === this.args.routeInfo.method &&
-                        route.Path === this.args.routeInfo.path &&
-                        route.Name === this.args.routeInfo.name
-                ) || {}
-            );
+            return this.plugin.routes.find(route => route.Path === this.path) || {};
         },
         path() {
-            return this.args.routeInfo.path;
+            return this.args.path;
         },
         headers() {
             return this.args.headers || [];
@@ -187,9 +167,8 @@ export default {
         },
     },
     methods: {
-        setRouteInfo(value) {
-            const [method, name, path] = value.split('-');
-            this.$emit('update:args', { ...this.args, routeInfo: { method, path, name } });
+        setRoutePath(path) {
+            this.$emit('update:args', { ...this.args, path });
         },
         setHeaders(headers) {
             this.$emit('update:args', { ...this.args, headers });
@@ -199,17 +178,6 @@ export default {
         },
         setQueries(queries) {
             this.$emit('update:args', { ...this.args, queries });
-        },
-        fetchRoutes() {
-            this.plugin.fetchRoutes();
-        },
-    },
-    watch: {
-        'plugin.routes': {
-            deep: true,
-            handler() {
-                this.$forceUpdate();
-            },
         },
     },
 };

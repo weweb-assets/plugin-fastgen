@@ -6,21 +6,17 @@
                     class="w-100"
                     placeholder="Select a route"
                     :disabled="!plugin.project"
-                    :model-value="selectedValue"
+                    :model-value="selectedRoute.Name"
                     :options="routesOptions"
                     required
                     label="Route"
-                    @update:modelValue="setRouteInfo"
+                    @update:modelValue="setRoutePath"
                 />
                 <button type="button" class="ww-editor-button -secondary -small -icon ml-2" @click="fetchRoutes">
                     <wwEditorIcon name="refresh" medium />
                 </button>
             </div>
         </wwEditorFormRow>
-
-        <div>
-            {{ routesOptions }}
-        </div>
 
         <div v-if="selectedRoute.Name">
             <div class="p-2 mb-4 ww-border-radius-02 border-primary">
@@ -154,26 +150,19 @@ export default {
         routesOptions() {
             return this.plugin.routes.map(api => ({
                 label: api.Name,
-                value: `${api.Method}-${api.Name}-${api.Path}`,
+                value: api.Name,
             }));
-        },
-        selectedValue() {
-            return `${this.config.routeInfo.method}-${this.config.routeInfo.name}-${this.config.routeInfo.path}`;
         },
         selectedRoute() {
             return (
-                this.plugin.routes.find(
-                    route =>
-                        route.Method === this.config.routeInfo.method &&
-                        route.Path === this.config.routeInfo.path &&
-                        route.Name === this.config.routeInfo.name
-                ) || {}
+                this.plugin.routes.find(route => route.Path === this.config.path && route.Name === this.config.name) ||
+                {}
             );
         },
         route() {
-            const [method, name, path] = (this.config.path || '').split('-');
             return {
-                routeInfo: { method, path, name },
+                path: null,
+                name: null,
                 headers: [],
                 body: [],
                 ...this.config,
@@ -181,9 +170,9 @@ export default {
         },
     },
     methods: {
-        setRouteInfo(value) {
-            const [method, name, path] = (value || '').split('-');
-            this.$emit('update:config', { ...this.config, routeInfo: { method, path, name } });
+        setRoutePath(name) {
+            const path = this.plugin.routes.find(route => route.Name === name)?.Path;
+            this.$emit('update:config', { ...this.config, path, name });
         },
         setProp(key, value) {
             const updatedRoute = { ...this.route, [key]: value };
@@ -191,7 +180,7 @@ export default {
         },
         fetchRoutes() {
             this.plugin.fetchRoutes();
-            this.setRouteInfo('');
+            this.setRoutePath('');
         },
     },
 };
