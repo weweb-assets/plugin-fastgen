@@ -66,7 +66,13 @@ export default {
             preview: body,
         });
 
-        console.log('✅ apiRequest', url, 'with method', method, 'and payload', payload);
+        console.log('✅ apiRequest', url, 'with method', method, 'and payload', {
+            url,
+            method,
+            params,
+            data: body,
+            headers: buildFastgenHeaders({ authToken, dataType }, headers),
+        });
 
         return await axios({
             url,
@@ -74,7 +80,6 @@ export default {
             params,
             data: body,
             headers: buildFastgenHeaders({ authToken, dataType }, headers),
-            withCredentials: this.settings.publicData.withCredentials || withCredentials,
         });
     },
 };
@@ -96,24 +101,10 @@ function computeList(list) {
     return (list || []).reduce((obj, item) => ({ ...obj, [item.key]: item.value }), {});
 }
 
-function buildFastgenHeaders(
-    {
-        xDataSource = getCurrentDataSource(),
-        xBranch = getCurrentBranch(),
-        authToken,
-        dataType,
-        globalHeaders = getGlobalHeaders(),
-    },
-    customHeaders = []
-) {
+function buildFastgenHeaders({ authToken, dataType }, customHeaders = []) {
     return {
-        ...(xDataSource ? { 'X-Data-Source': xDataSource } : {}),
-        ...(xBranch ? { 'X-Branch': xBranch } : {}),
         ...(authToken ? { Authorization: `Bearer ${authToken}` } : {}),
         ...(dataType ? { 'Content-Type': dataType } : {}),
-        ...(Array.isArray(globalHeaders) ? globalHeaders : [])
-            .filter(header => !!header && !!header.key)
-            .reduce((curr, next) => ({ ...curr, [next.key]: next.value }), {}),
         ...(Array.isArray(customHeaders) ? customHeaders : [])
             .filter(header => !!header && !!header.key)
             .reduce((curr, next) => ({ ...curr, [next.key]: next.value }), {}),
