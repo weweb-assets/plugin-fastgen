@@ -52,14 +52,14 @@ export default {
     //     return response.data;
     // },
 
-    async request({ path, headers, params, body, dataType }, wwUtils) {
+    async request({ path, headers, queries, body, dataType }, wwUtils) {
         const authToken = wwLib.wwPlugins.fastgenAuth && wwLib.wwPlugins.fastgenAuth.authToken;
 
         const url = 'https://' + this.fastgenInstance.project.value.Subdomain + path;
         const route = this.fastgenInstance.routes.value.find(route => route.Path === path);
         const method = route.Method;
 
-        for (const key in params) url = url.replace(`{${key}}`, params[key]);
+        for (const key in queries) url = url.replace(`{${key}}`, queries[key]);
 
         wwUtils?.log('info', `[Fastgen] Requesting ${method.toUpperCase()} - ${url}`, {
             type: 'request',
@@ -69,7 +69,7 @@ export default {
         console.log('✅ apiRequest', url, 'with method', method, 'and payload', {
             url,
             method,
-            params: computeList(params),
+            params: computeList(queries),
             data: computeList(body),
             headers: buildFastgenHeaders({ authToken, dataType }, headers),
         });
@@ -77,7 +77,7 @@ export default {
         return await axios({
             url,
             method,
-            params: computeList(params),
+            params: computeList(queries),
             data: computeList(body),
             headers: buildFastgenHeaders({ authToken, dataType }, headers),
         });
