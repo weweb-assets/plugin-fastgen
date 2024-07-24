@@ -99,39 +99,10 @@ export default {
     /* wwEditor:end */
 };
 
-function computePayload(method, data, headers, params, dataType, useRawBody) {
+function computePayload(_, data, headers, params) {
     if (!useRawBody) {
         data = computeList(data);
-        console.log('✅ data 1', data);
-
-        switch (dataType) {
-            case 'application/x-www-form-urlencoded': {
-                data = qs.stringify(data);
-                break;
-            }
-            case 'multipart/form-data': {
-                const formData = new FormData();
-                for (const key in data) formData.append(key, data[key]);
-                data = formData;
-                break;
-            }
-            default:
-                break;
-        }
     }
-
-    console.log('✅ data 2', data);
-
-    switch (method) {
-        case 'GET':
-        case 'DELETE':
-            data = undefined;
-            break;
-        default:
-            break;
-    }
-
-    console.log('✅ data 3', data);
 
     return {
         data,
