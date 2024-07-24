@@ -100,9 +100,7 @@ export default {
 };
 
 function computePayload(_, data, headers, params) {
-    if (!useRawBody) {
-        data = computeList(data);
-    }
+    data = computeList(data);
 
     return {
         data,
