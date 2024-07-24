@@ -12,6 +12,9 @@ export default {
         /* wwEditor:start */
         if (settings.privateData.integrationToken) {
             this.fastgenInstance = useFastgenInstance();
+            console.log('✅ Fastgen instance created', this.fastgenInstance);
+            await this.fastgenInstance.fetchProject();
+            await this.fastgenInstance.fetchRoutes();
         }
         /* wwEditor:end */
     },

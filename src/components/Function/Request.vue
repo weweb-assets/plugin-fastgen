@@ -1,21 +1,24 @@
 <template>
     <div class="fastgen-api-collection-edit">
-        <div class="flex items-center mb-4">
-            <wwEditorInputRow
-                class="w-100"
-                type="select"
-                placeholder="Select a route"
-                :model-value="selectedRoute.Name"
-                :disabled="!plugin.project"
-                :options="routesOptions"
-                required
-                label="Route"
-                @update:modelValue="setRoutePath"
-            />
-            <button type="button" class="ww-editor-button -secondary -small -icon ml-2" @click="fetchRoutes">
-                <wwEditorIcon name="refresh" medium />
-            </button>
-        </div>
+        <wwEditorFormRow label="Route" required>
+            <div class="flex items-center">
+                <wwEditorInputTextSelect
+                    class="w-100"
+                    placeholder="Select a route"
+                    :disabled="!plugin.project"
+                    :model-value="selectedRoute.Name"
+                    :options="routesOptions"
+                    required
+                    label="Route"
+                    @update:modelValue="setRoutePath"
+                />
+                <button type="button" class="ww-editor-button -secondary -small -icon ml-2" @click="fetchRoutes">
+                    <wwEditorIcon name="refresh" medium />
+                </button>
+            </div>
+        </wwEditorFormRow>
+
+        {{ selectedRoute }}
 
         <div v-if="selectedRoute.Name">
             <div class="p-2 mb-4 ww-border-radius-02 border-primary">
@@ -135,7 +138,7 @@
 </template>
 
 <script>
-import { computed } from 'vue';
+import { computed, onMounted } from 'vue';
 import useFastgenInstance from '../../useFastgenInstance';
 
 export default {
@@ -163,8 +166,10 @@ export default {
             }));
         });
 
+        console.log('👾 routes', routes);
+
         const selectedRoute = computed(() => {
-            routes.value.find(route => route.Path === props.arg.path && route.Name === props.arg.name) || {};
+            (routes.value || []).find(route => route.Path === props.args.path && route.Name === props.args.name) || {};
         });
 
         const route = computed(() => {
@@ -175,6 +180,11 @@ export default {
                 queries: [],
                 ...props.args,
             };
+        });
+
+        onMounted(() => {
+            props.plugin.onLoad();
+            console.log('onMounted', routes);
         });
 
         return {
