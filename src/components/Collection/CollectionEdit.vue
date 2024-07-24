@@ -149,8 +149,6 @@ export default {
     setup(props) {
         const { routes, fetchRoutes } = useFastgenInstance();
 
-        console.log('routes', routes);
-
         const routesOptions = computed(() => {
             return routes.value.map(api => ({
                 label: api.Name,

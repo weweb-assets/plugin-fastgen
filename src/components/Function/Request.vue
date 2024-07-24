@@ -6,7 +6,7 @@
                     class="w-100"
                     placeholder="Select a route"
                     :disabled="!plugin.project"
-                    :model-value="selectedRoute.Name"
+                    :model-value="selectedRoute?.Name"
                     :options="routesOptions"
                     required
                     label="Route"
@@ -18,11 +18,13 @@
             </div>
         </wwEditorFormRow>
 
-        {{ selectedRoute }}
+        selectedRoute: {{ selectedRoute }}
 
-        <div v-if="selectedRoute.Name">
+        Arguments: {{ args }}
+
+        <div v-if="selectedRoute?.Name">
             <div class="p-2 mb-4 ww-border-radius-02 border-primary">
-                {{ selectedRoute.Name }} <br />
+                {{ selectedRoute?.Name }} <br />
                 <span class="body-sm content-secondary mt-1">{{ project?.Subdomain || '' + selectedRoute.Path }}</span>
             </div>
 
@@ -138,22 +140,13 @@
 </template>
 
 <script>
-import { computed, onMounted } from 'vue';
+import { computed, watch } from 'vue';
 import useFastgenInstance from '../../useFastgenInstance';
 
 export default {
     props: {
         plugin: { type: Object, required: true },
-        config: { type: Object, required: true },
-        args: {
-            type: Object,
-            default: () => ({
-                path: null,
-                body: [],
-                headers: [],
-                queries: [],
-            }),
-        },
+        args: { type: Object, default: () => {} },
     },
     emits: ['update:args'],
     setup(props) {
@@ -169,22 +162,26 @@ export default {
         console.log('👾 routes', routes);
 
         const selectedRoute = computed(() => {
-            (routes.value || []).find(route => route.Path === props.args.path && route.Name === props.args.name) || {};
+            routes.value.find(route => route.Path === props.args.path && route.Name === props.args.name) || {};
+        });
+
+        watch(selectedRoute, () => {
+            console.log('👾 selectedRoute', selectedRoute.value);
+        });
+
+        watch(props.args, () => {
+            console.log('👾 args', props.args);
         });
 
         const route = computed(() => {
             return {
+                name: null,
                 path: null,
                 headers: [],
                 body: [],
                 queries: [],
                 ...props.args,
             };
-        });
-
-        onMounted(() => {
-            props.plugin.onLoad();
-            console.log('onMounted', routes);
         });
 
         return {
@@ -198,7 +195,9 @@ export default {
     methods: {
         setRoutePath(name) {
             const path = this.routes.find(route => route.Name === name)?.Path;
+            console.log('👾 setRoutePath', this.args);
             this.$emit('update:args', { ...this.args, path, name });
+            console.log('👾 setRoutePath After', this.args);
         },
         setHeaders(headers) {
             this.$emit('update:args', { ...this.args, headers });
