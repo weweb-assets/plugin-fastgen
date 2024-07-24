@@ -80,6 +80,7 @@ export default {
             url,
             method,
             data: payload.data,
+            body: payload.data,
             headers: payload.headers,
             params: payload.params,
         });
