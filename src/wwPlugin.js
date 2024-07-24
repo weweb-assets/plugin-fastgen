@@ -106,7 +106,7 @@ function computePayload(_, data, headers, params) {
         data,
         params: computeList(params),
         headers: {
-            'content-type': dataType || 'application/json',
+            'content-type': 'application/json',
             ...computeList(headers),
         },
     };
