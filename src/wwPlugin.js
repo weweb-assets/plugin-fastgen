@@ -33,7 +33,9 @@ export default {
     },
 
     async request({ path, headers, queries, body, dataType }, wwUtils) {
-        const authToken = wwLib.wwPlugins.fastgenAuth && wwLib.wwPlugins.fastgenAuth.accessToken;
+        const authToken =
+            (wwLib.wwPlugins.fastgenAuth && wwLib.wwPlugins.fastgenAuth.accessToken) ||
+            Object.values(wwLib.wwPlugins).find(plugin => plugin.name === 'Fastgen Auth')?.accessToken;
 
         let url = 'https://' + this.fastgenInstance.project.value.Subdomain + path;
         const route = this.fastgenInstance.routes.value.find(route => route.Path === path);
