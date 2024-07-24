@@ -37,7 +37,7 @@ export default {
 
     async apiRequest({ path, body, headers, queries }, wwUtils) {
         /* wwEditor:start */
-        const route = this.routes.find(route => route.Path === path);
+        const route = this.fastgenInstance.routes.value.find(route => route.Path === path);
         const method = route.Method;
 
         const payload = computePayload(method, body, headers, queries);
@@ -56,7 +56,7 @@ export default {
     },
 
     async _apiRequest(path, body, headers, queries) {
-        const url = 'https://' + this.project.Subdomain + path;
+        const url = 'https://' + this.fastgenInstance.project.value.Subdomain + path;
         const route = this.routes.find(route => route.Path === path);
         const method = route.Method;
 
