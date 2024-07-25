@@ -12,7 +12,6 @@ export default () => {
         );
 
         PROJECT.value = response.data.data;
-        console.log('✅ Project fetched', PROJECT.value);
     }
 
     async function fetchRoutes() {
@@ -21,7 +20,6 @@ export default () => {
         );
 
         ROUTES.value = response.data.data;
-        console.log('✅ Routes fetched', ROUTES.value);
     }
 
     return {

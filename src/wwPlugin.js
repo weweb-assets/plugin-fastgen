@@ -8,15 +8,14 @@ import useFastgenInstance from './useFastgenInstance';
 
 export default {
     fastgenInstance: null,
+
     async _onLoad(settings) {
         this.fastgenInstance = useFastgenInstance();
-        console.log('✅ Fastgen instance created', this.fastgenInstance);
         await this.fastgenInstance.fetchProject();
         await this.fastgenInstance.fetchRoutes();
+        console.log('✅ Fastgen Datasource instance created', this.fastgenInstance);
     },
-    /*=============================================m_ÔÔ_m=============================================\
-        Collection API
-    \================================================================================================*/
+
     async _fetchCollection(collection) {
         try {
             const { data } = await this.request(collection.config);
