@@ -7,13 +7,14 @@ import './components/Collection/CollectionSummary.vue';
 import useFastgenInstance from './useFastgenInstance';
 
 export default {
-    fastgenInstance: null,
-
     async _onLoad(settings) {
-        this.fastgenInstance = useFastgenInstance(wwAxios);
-        await this.fastgenInstance.fetchProject();
-        await this.fastgenInstance.fetchRoutes();
-        console.log('✅ Fastgen Datasource instance created', this.fastgenInstance);
+        /* wwEditor:start */
+        const { project, routes, fetchProject, fetchRoutes } = useFastgenInstance();
+        await fetchProject();
+        await fetchRoutes();
+        settings.publicData = { project, routes };
+        /* wwEditor:end */
+        console.log('✅ Fastgen Datasource loaded', settings.publicData);
     },
 
     async _fetchCollection(collection) {
@@ -32,8 +33,8 @@ export default {
             (wwLib.wwPlugins.fastgenAuth && wwLib.wwPlugins.fastgenAuth.accessToken) ||
             Object.values(wwLib.wwPlugins).find(plugin => plugin.name === 'Fastgen Auth')?.accessToken;
 
-        let url = 'https://' + this.fastgenInstance.project.value.Subdomain + path;
-        const route = this.fastgenInstance.routes.value.find(route => route.Path === path);
+        let url = 'https://' + this.settings.publicData.project.value.Subdomain + path;
+        const route = this.settings.publicData.routes.value.find(route => route.Path === path);
         const method = route.Method;
 
         for (const key in queries) url = url.replace(`{${key}}`, queries[key]);
