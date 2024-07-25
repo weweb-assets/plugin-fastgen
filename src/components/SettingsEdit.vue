@@ -74,7 +74,14 @@ export default {
 
                 this.$emit('update:settings', {
                     ...this.settings,
-                    publicData: { ...this.settings.publicData, project: this.project, routes: this.routes },
+                    publicData: {
+                        ...this.settings.publicData,
+                        project: {
+                            Name: this.project?.Name,
+                            Subdomain: this.project?.Subdomain,
+                        },
+                        routes: this.routes,
+                    },
                 });
             }
         },
