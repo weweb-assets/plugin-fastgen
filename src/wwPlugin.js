@@ -10,7 +10,7 @@ export default {
     fastgenInstance: null,
 
     async _onLoad(settings) {
-        this.fastgenInstance = useFastgenInstance();
+        this.fastgenInstance = useFastgenInstance(wwAxios);
         await this.fastgenInstance.fetchProject();
         await this.fastgenInstance.fetchRoutes();
         console.log('✅ Fastgen Datasource instance created', this.fastgenInstance);

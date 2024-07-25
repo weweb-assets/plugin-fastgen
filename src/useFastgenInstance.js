@@ -3,11 +3,11 @@ import { ref } from 'vue';
 const PROJECT = ref(null);
 const ROUTES = ref([]);
 
-export default () => {
+export default wwAxios => {
     const websiteId = wwLib.wwWebsiteData.getInfo()?.id;
 
     async function fetchProject() {
-        const response = await window.wwAxios.get(
+        const response = await wwAxios.get(
             `${wwLib.wwApiRequests._getPluginsUrl()}/designs/${websiteId}/fastgen/datasource/project`
         );
 
@@ -15,7 +15,7 @@ export default () => {
     }
 
     async function fetchRoutes() {
-        const response = await window.wwAxios.get(
+        const response = await wwAxios.get(
             `${wwLib.wwApiRequests._getPluginsUrl()}/designs/${websiteId}/fastgen/project/routes`
         );
 
