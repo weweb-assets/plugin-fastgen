@@ -8,7 +8,7 @@ import useFastgenInstance from './useFastgenInstance';
 
 export default {
     fastgenInstance: null,
-    async onLoad(settings) {
+    async _onLoad(settings) {
         /* wwEditor:start */
         if (settings.privateData.integrationToken) {
             this.fastgenInstance = useFastgenInstance();

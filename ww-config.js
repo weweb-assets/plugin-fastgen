@@ -9,7 +9,7 @@ export default {
             getIsValid() {
                 return true;
             },
-            onSave: 'onLoad',
+            onSave: '_onLoad',
         },
         collection: {
             edit: () => import('./src/components/Collection/CollectionEdit.vue'),
