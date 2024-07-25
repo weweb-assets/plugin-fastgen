@@ -42,7 +42,7 @@
 </template>
 
 <script>
-import useFastgenInstance from '../../useFastgenInstance';
+import useFastgenInstance from '../useFastgenInstance';
 
 export default {
     props: {
