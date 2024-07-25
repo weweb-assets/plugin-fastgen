@@ -7,7 +7,7 @@ export default () => {
     const websiteId = wwLib.wwWebsiteData.getInfo()?.id;
 
     async function fetchProject() {
-        const response = await wwAxios.get(
+        const response = await window.wwAxios.get(
             `${wwLib.wwApiRequests._getPluginsUrl()}/designs/${websiteId}/fastgen/datasource/project`
         );
 
@@ -15,7 +15,7 @@ export default () => {
     }
 
     async function fetchRoutes() {
-        const response = await wwAxios.get(
+        const response = await window.wwAxios.get(
             `${wwLib.wwApiRequests._getPluginsUrl()}/designs/${websiteId}/fastgen/project/routes`
         );
 
