@@ -9,14 +9,10 @@ import useFastgenInstance from './useFastgenInstance';
 export default {
     fastgenInstance: null,
     async _onLoad(settings) {
-        /* wwEditor:start */
-        if (settings.privateData.integrationToken) {
-            this.fastgenInstance = useFastgenInstance();
-            console.log('✅ Fastgen instance created', this.fastgenInstance);
-            await this.fastgenInstance.fetchProject();
-            await this.fastgenInstance.fetchRoutes();
-        }
-        /* wwEditor:end */
+        this.fastgenInstance = useFastgenInstance();
+        console.log('✅ Fastgen instance created', this.fastgenInstance);
+        await this.fastgenInstance.fetchProject();
+        await this.fastgenInstance.fetchRoutes();
     },
     /*=============================================m_ÔÔ_m=============================================\
         Collection API
