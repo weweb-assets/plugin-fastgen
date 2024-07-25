@@ -4,16 +4,8 @@ import './components/Collection/CollectionEdit.vue';
 import './components/Collection/CollectionSummary.vue';
 /* wwEditor:end */
 
-import useFastgenInstance from './useFastgenInstance';
-
 export default {
     async _onLoad(settings) {
-        /* wwEditor:start */
-        const { project, routes, fetchProject, fetchRoutes } = useFastgenInstance();
-        await fetchProject();
-        await fetchRoutes();
-        settings.publicData = { project, routes };
-        /* wwEditor:end */
         console.log('✅ Fastgen Datasource loaded', settings.publicData);
     },
 
