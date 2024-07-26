@@ -143,16 +143,13 @@ import useFastgenInstance from '../../useFastgenInstance';
 export default {
     props: {
         plugin: { type: Object, required: true },
-        settings: { type: Object, required: true },
         args: { type: Object, default: () => {} },
     },
-    emits: ['update:args', 'update:settings'],
+    emits: ['update:args'],
     setup(props) {
         const isFetching = ref(false);
 
-        const { fetchRoutes } = useFastgenInstance();
-
-        const routes = computed(() => props.plugin.settings.publicData?.routes || []);
+        const { fetchRoutes, routes } = useFastgenInstance();
 
         const routesOptions = computed(() => {
             return routes.value.map(api => ({
@@ -207,14 +204,6 @@ export default {
         async fetchRoutes() {
             this.isFetching = true;
             await this.fetchRoutes();
-
-            this.$emit('update:settings', {
-                ...this.plugin.settings,
-                publicData: {
-                    ...this.plugin.settings.publicData,
-                    routes: this.routes,
-                },
-            });
             this.isFetching = false;
         },
     },

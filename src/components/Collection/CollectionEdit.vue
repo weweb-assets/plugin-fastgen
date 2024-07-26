@@ -144,16 +144,13 @@ export default {
     props: {
         plugin: { type: Object, required: true },
         collection: { type: Object, required: true },
-        settings: { type: Object, required: true },
         config: { type: Object, required: true },
     },
-    emits: ['update:config', 'update:settings'],
-    setup(props, { emit }) {
+    emits: ['update:config'],
+    setup(props) {
         const isFetching = ref(false);
 
-        const { fetchProject, fetchRoutes } = useFastgenInstance();
-
-        const routes = computed(() => props.plugin.settings.publicData?.routes || []);
+        const { fetchRoutes, routes } = useFastgenInstance();
 
         const routesOptions = computed(() => {
             return routes.value.map(api => ({
@@ -184,16 +181,7 @@ export default {
 
         onMounted(async () => {
             isFetching.value = true;
-            await fetchProject();
             await fetchRoutes();
-
-            emit('update:settings', {
-                ...props.plugin.settings,
-                publicData: {
-                    ...props.plugin.settings.publicData,
-                    routes: props.routes,
-                },
-            });
             isFetching.value = false;
         });
 
@@ -219,14 +207,6 @@ export default {
         async fetchRoutes() {
             this.isFetching = true;
             await this.fetchRoutes();
-
-            this.$emit('update:settings', {
-                ...this.plugin.settings,
-                publicData: {
-                    ...this.plugin.settings.publicData,
-                    routes: this.routes,
-                },
-            });
             this.isFetching = false;
         },
     },

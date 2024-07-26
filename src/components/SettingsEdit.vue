@@ -80,7 +80,6 @@ export default {
                             Name: this.project?.Name,
                             Subdomain: this.project?.Subdomain,
                         },
-                        routes: this.routes,
                     },
                 });
             }
