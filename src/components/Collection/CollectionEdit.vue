@@ -180,8 +180,8 @@ export default {
         });
 
         onMounted(async () => {
-            await fetchRoutes();
             await fetchProject();
+            await fetchRoutes();
 
             emit('update:settings', {
                 ...props.settings,
