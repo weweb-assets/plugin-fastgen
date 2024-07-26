@@ -21,10 +21,7 @@ export default {
             (wwLib.wwPlugins.fastgenAuth && wwLib.wwPlugins.fastgenAuth.accessToken) ||
             Object.values(wwLib.wwPlugins).find(plugin => plugin.name === 'Fastgen Auth')?.accessToken;
 
-        console.log('✅ Request', path, method, headers, queries, body, dataType, authToken);
-
         let url = 'https://' + this.settings.publicData.project?.Subdomain + path;
-
         for (const key in queries) url = url.replace(`{${key}}`, queries[key]);
 
         /* wwEditor:start */
@@ -35,7 +32,6 @@ export default {
         /* wwEditor:end */
 
         const shouldHaveBody = ['POST', 'PATCH'].includes(method);
-
         const params = Array.isArray(queries) ? computeList(queries) : queries;
         const data = shouldHaveBody ? (Array.isArray(body) ? computeList(body) : body) : null;
 
