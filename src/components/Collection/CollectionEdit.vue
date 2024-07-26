@@ -143,13 +143,12 @@ import useFastgenInstance from '../../useFastgenInstance';
 export default {
     props: {
         plugin: { type: Object, required: true },
+        collection: { type: Object, required: true },
         config: { type: Object, required: true },
     },
     emits: ['update:config'],
     setup(props) {
         const { fetchRoutes } = useFastgenInstance();
-
-        console.log('props', props);
 
         const routes = computed(() => props.plugin.settings.publicData?.routes || []);
 
