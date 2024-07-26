@@ -137,7 +137,7 @@
 </template>
 
 <script>
-import { computed } from 'vue';
+import { computed, onMounted } from 'vue';
 import useFastgenInstance from '../../useFastgenInstance';
 
 export default {
@@ -147,8 +147,8 @@ export default {
         config: { type: Object, required: true },
     },
     emits: ['update:config'],
-    setup(props) {
-        const { fetchRoutes } = useFastgenInstance();
+    setup(props, { emit }) {
+        const { fetchProject, fetchRoutes } = useFastgenInstance();
 
         const routes = computed(() => props.plugin.settings.publicData?.routes || []);
 
@@ -177,6 +177,19 @@ export default {
 
         const shouldHaveBody = computed(() => {
             return selectedRoute.value.Method === 'POST' || selectedRoute.value.Method === 'PATCH';
+        });
+
+        onMounted(async () => {
+            await fetchRoutes();
+            await fetchProject();
+
+            emit('update:settings', {
+                ...props.settings,
+                publicData: {
+                    ...props.settings.publicData,
+                    routes: props.routes,
+                },
+            });
         });
 
         return {
