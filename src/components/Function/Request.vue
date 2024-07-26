@@ -147,7 +147,7 @@ export default {
     },
     emits: ['update:args'],
     setup(props) {
-        const { fetchRoutes } = useFastgenInstance();
+        const { fetchProject, fetchRoutes } = useFastgenInstance();
 
         const routes = computed(() => props.plugin.settings.publicData?.routes || []);
 
@@ -178,6 +178,7 @@ export default {
         });
 
         return {
+            fetchProject,
             fetchRoutes,
             routesOptions,
             selectedRoute,
@@ -200,8 +201,9 @@ export default {
         setQueries(queries) {
             this.$emit('update:args', { ...this.args, queries });
         },
-        fetchRoutes() {
-            this.fetchRoutes();
+        async fetchRoutes() {
+            await this.fetchProject();
+            await this.fetchRoutes();
         },
     },
 };
