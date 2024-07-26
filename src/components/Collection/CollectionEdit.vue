@@ -142,25 +142,24 @@ import useFastgenInstance from '../../useFastgenInstance';
 
 export default {
     props: {
-        plugin: { type: Object, required: true },
-        collection: { type: Object, required: true },
+        settings: { type: Object, required: true },
         config: { type: Object, required: true },
     },
     emits: ['update:config'],
     setup(props) {
-        const { routes, fetchRoutes } = useFastgenInstance();
+        const { fetchRoutes } = useFastgenInstance();
+
+        const routes = computed(() => props.settings.publicData.routes || []);
 
         const routesOptions = computed(() => {
-            return routes.value.map(api => ({
+            return routes.map(api => ({
                 label: api.Name,
                 value: api.Name,
             }));
         });
 
         const selectedRoute = computed(() => {
-            return (
-                routes.value.find(route => route.Path === props.config.path && route.Name === props.config.name) || {}
-            );
+            return routes.find(route => route.Path === props.config.path && route.Name === props.config.name) || {};
         });
 
         const route = computed(() => {
