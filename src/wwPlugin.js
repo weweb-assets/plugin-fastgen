@@ -41,13 +41,14 @@ export default {
 
         const shouldHaveBody = ['POST', 'PATCH'].includes(method);
 
-        console.log('✅ TEST', queries, body, headers);
+        const params = typeof queries === 'object' ? queries : computeList(queries);
+        const data = shouldHaveBody ? (typeof body === 'object' ? body : computeList(body)) : null;
 
         console.log('✅ Request', url, 'with method', method, 'and payload', {
             url,
             method,
-            params: computeList(queries),
-            data: shouldHaveBody ? computeList(body) : null,
+            params,
+            data,
             headers: buildFastgenHeaders({ authToken, dataType }, headers),
         });
 
