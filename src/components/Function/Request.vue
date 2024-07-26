@@ -202,7 +202,7 @@ export default {
         setHeaders(headers) {
             console.log('before', this.args);
             this.$emit('update:args', { ...this.args, headers });
-            conseole.log('after', this.args);
+            console.log('after', this.args);
         },
         setBody(body) {
             this.$emit('update:args', { ...this.args, body });
