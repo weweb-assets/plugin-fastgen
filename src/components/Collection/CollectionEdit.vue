@@ -213,9 +213,3 @@ export default {
     },
 };
 </script>
-
-<style>
-.code-editor {
-    max-height: 200px;
-}
-</style>
