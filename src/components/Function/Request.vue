@@ -150,7 +150,7 @@ export default {
     setup(props) {
         const isFetching = ref(false);
 
-        const { fetchProject, fetchRoutes } = useFastgenInstance();
+        const { fetchRoutes } = useFastgenInstance();
 
         const routes = computed(() => props.plugin.settings.publicData?.routes || []);
 
@@ -181,7 +181,6 @@ export default {
         });
 
         return {
-            fetchProject,
             fetchRoutes,
             routesOptions,
             selectedRoute,
@@ -207,7 +206,6 @@ export default {
         },
         async fetchRoutes() {
             this.isFetching = true;
-            await this.fetchProject();
             await this.fetchRoutes();
 
             this.$emit('update:settings', {
