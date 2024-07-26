@@ -146,7 +146,7 @@ export default {
         settings: { type: Object, required: true },
         args: { type: Object, default: () => {} },
     },
-    emits: ['update:args'],
+    emits: ['update:args', 'update:settings'],
     setup(props) {
         const isFetching = ref(false);
 
@@ -209,9 +209,9 @@ export default {
             await this.fetchRoutes();
 
             this.$emit('update:settings', {
-                ...this.settings,
+                ...this.plugin.settings,
                 publicData: {
-                    ...this.settings.publicData,
+                    ...this.plugin.settings.publicData,
                     routes: this.routes,
                 },
             });

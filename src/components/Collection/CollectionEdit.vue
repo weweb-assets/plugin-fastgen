@@ -147,7 +147,7 @@ export default {
         settings: { type: Object, required: true },
         config: { type: Object, required: true },
     },
-    emits: ['update:config'],
+    emits: ['update:config', 'update:settings'],
     setup(props, { emit }) {
         const isFetching = ref(false);
 
@@ -188,9 +188,9 @@ export default {
             await fetchRoutes();
 
             emit('update:settings', {
-                ...props.settings,
+                ...props.plugin.settings,
                 publicData: {
-                    ...props.settings.publicData,
+                    ...props.plugin.settings.publicData,
                     routes: props.routes,
                 },
             });
@@ -221,9 +221,9 @@ export default {
             await this.fetchRoutes();
 
             this.$emit('update:settings', {
-                ...this.settings,
+                ...this.plugin.settings,
                 publicData: {
-                    ...this.settings.publicData,
+                    ...this.plugin.settings.publicData,
                     routes: this.routes,
                 },
             });
