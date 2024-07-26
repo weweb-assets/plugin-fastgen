@@ -152,7 +152,7 @@ export default {
         const routes = computed(() => props.settings.publicData.routes || []);
 
         const routesOptions = computed(() => {
-            return routes.map(api => ({
+            return routes.value.map(api => ({
                 label: api.Name,
                 value: api.Name,
             }));
