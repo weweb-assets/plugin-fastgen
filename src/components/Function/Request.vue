@@ -137,7 +137,7 @@
 </template>
 
 <script>
-import { computed } from 'vue';
+import { ref, computed } from 'vue';
 import useFastgenInstance from '../../useFastgenInstance';
 
 export default {
