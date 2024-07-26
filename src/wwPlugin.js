@@ -36,8 +36,8 @@ export default {
 
         const shouldHaveBody = ['POST', 'PATCH'].includes(method);
 
-        const params = typeof queries === 'object' ? queries : computeList(queries);
-        const data = shouldHaveBody ? (typeof body === 'object' ? body : computeList(body)) : null;
+        const params = Array.isArray(queries) ? computeList(queries) : queries;
+        const data = shouldHaveBody ? (Array.isArray(body) ? computeList(body) : body) : null;
 
         return await axios({
             url,
