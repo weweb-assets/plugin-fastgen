@@ -137,7 +137,7 @@
 </template>
 
 <script>
-import { ref, computed } from 'vue';
+import { ref, computed, onMounted } from 'vue';
 import useFastgenInstance from '../../useFastgenInstance';
 
 export default {
@@ -175,6 +175,12 @@ export default {
 
         const shouldHaveBody = computed(() => {
             return selectedRoute.value.Method === 'POST' || selectedRoute.value.Method === 'PATCH';
+        });
+
+        onMounted(async () => {
+            isFetching.value = true;
+            await fetchRoutes();
+            isFetching.value = false;
         });
 
         return {

@@ -41,6 +41,8 @@ export default {
 
         const shouldHaveBody = ['POST', 'PATCH'].includes(method);
 
+        console.log('✅ TEST', queries, body, headers);
+
         console.log('✅ Request', url, 'with method', method, 'and payload', {
             url,
             method,
