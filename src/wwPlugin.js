@@ -27,7 +27,7 @@ export default {
 
         let url = 'https://' + this.settings.publicData.project?.Subdomain + path;
         const route = this.settings.publicData.routes.find(route => route.Path === path);
-        console.log('✅ Route', route);
+        console.log('✅ Route finder', this.settings.publicData.routes, path, route);
         const method = route.Method;
 
         for (const key in queries) url = url.replace(`{${key}}`, queries[key]);
