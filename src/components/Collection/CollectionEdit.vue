@@ -5,7 +5,7 @@
                 <wwEditorInputTextSelect
                     class="w-100"
                     placeholder="Select a route"
-                    :disabled="!plugin.project"
+                    :disabled="!plugin.project || isFetching"
                     :model-value="selectedRoute.Name"
                     :options="routesOptions"
                     required
@@ -149,6 +149,8 @@ export default {
     },
     emits: ['update:config'],
     setup(props, { emit }) {
+        const isFetching = ref(false);
+
         const { fetchProject, fetchRoutes } = useFastgenInstance();
 
         const routes = computed(() => props.plugin.settings.publicData?.routes || []);
@@ -181,6 +183,7 @@ export default {
         });
 
         onMounted(async () => {
+            isFetching.value = true;
             await fetchProject();
             await fetchRoutes();
 
@@ -191,6 +194,7 @@ export default {
                     routes: props.routes,
                 },
             });
+            isFetching.value = false;
         });
 
         return {
@@ -200,6 +204,7 @@ export default {
             routes,
             route,
             shouldHaveBody,
+            isFetching,
         };
     },
     methods: {
@@ -211,8 +216,9 @@ export default {
             const updatedRoute = { ...this.route, [key]: value };
             this.$emit('update:config', updatedRoute);
         },
-        fetchRoutes() {
-            this.fetchRoutes();
+        async fetchRoutes() {
+            this.isFetching = true;
+            await this.fetchRoutes();
 
             this.$emit('update:settings', {
                 ...this.settings,
@@ -221,6 +227,7 @@ export default {
                     routes: this.routes,
                 },
             });
+            this.isFetching = false;
         },
     },
 };

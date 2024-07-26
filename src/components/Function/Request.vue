@@ -5,7 +5,7 @@
                 <wwEditorInputTextSelect
                     class="w-100"
                     placeholder="Select a route"
-                    :disabled="!plugin.project"
+                    :disabled="!plugin.project || isFetching"
                     :model-value="selectedRoute.Name"
                     :options="routesOptions"
                     required
@@ -143,10 +143,13 @@ import useFastgenInstance from '../../useFastgenInstance';
 export default {
     props: {
         plugin: { type: Object, required: true },
+        settings: { type: Object, required: true },
         args: { type: Object, default: () => {} },
     },
     emits: ['update:args'],
     setup(props) {
+        const isFetching = ref(false);
+
         const { fetchProject, fetchRoutes } = useFastgenInstance();
 
         const routes = computed(() => props.plugin.settings.publicData?.routes || []);
@@ -185,6 +188,7 @@ export default {
             routes,
             route,
             shouldHaveBody,
+            isFetching,
         };
     },
     methods: {
@@ -202,8 +206,18 @@ export default {
             this.$emit('update:args', { ...this.args, queries });
         },
         async fetchRoutes() {
+            this.isFetching = true;
             await this.fetchProject();
             await this.fetchRoutes();
+
+            this.$emit('update:settings', {
+                ...this.settings,
+                publicData: {
+                    ...this.settings.publicData,
+                    routes: this.routes,
+                },
+            });
+            this.isFetching = false;
         },
     },
 };
