@@ -11,6 +11,7 @@ export default {
 
     async _fetchCollection(collection) {
         try {
+            console.log('✅ Fetching collection', collection);
             const { data } = await this.request(collection.config);
             return { data, error: null };
         } catch (err) {
