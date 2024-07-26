@@ -32,10 +32,12 @@ export default {
 
         for (const key in queries) url = url.replace(`{${key}}`, queries[key]);
 
+        /* wwEditor:start */
         wwUtils?.log('info', `[Fastgen] Requesting ${method.toUpperCase()} - ${url}`, {
             type: 'request',
             preview: body,
         });
+        /* wwEditor:end */
 
         const shouldHaveBody = ['POST', 'PATCH'].includes(method);
 
