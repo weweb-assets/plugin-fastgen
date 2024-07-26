@@ -149,7 +149,7 @@ export default {
     setup(props) {
         const { fetchRoutes } = useFastgenInstance();
 
-        const routes = computed(() => props.settings.publicData.routes || []);
+        const routes = computed(() => props.settings.publicData?.routes || []);
 
         const routesOptions = computed(() => {
             return routes.value.map(api => ({
