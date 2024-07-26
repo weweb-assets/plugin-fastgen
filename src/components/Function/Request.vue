@@ -200,9 +200,7 @@ export default {
             this.$emit('update:args', { ...this.args, path, name, method });
         },
         setHeaders(headers) {
-            console.log('before', this.args);
             this.$emit('update:args', { ...this.args, headers });
-            console.log('after', this.args);
         },
         setBody(body) {
             this.$emit('update:args', { ...this.args, body });
