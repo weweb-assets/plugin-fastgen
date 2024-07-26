@@ -159,7 +159,9 @@ export default {
         });
 
         const selectedRoute = computed(() => {
-            return routes.find(route => route.Path === props.config.path && route.Name === props.config.name) || {};
+            return (
+                routes.value.find(route => route.Path === props.config.path && route.Name === props.config.name) || {}
+            );
         });
 
         const route = computed(() => {
