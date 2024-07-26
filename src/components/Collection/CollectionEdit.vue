@@ -199,7 +199,14 @@ export default {
         },
         fetchRoutes() {
             this.fetchRoutes();
-            this.setRoutePath('');
+
+            this.$emit('update:settings', {
+                ...this.settings,
+                publicData: {
+                    ...this.settings.publicData,
+                    routes: this.routes,
+                },
+            });
         },
     },
 };
