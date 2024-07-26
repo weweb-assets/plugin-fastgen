@@ -144,6 +144,7 @@ export default {
     props: {
         plugin: { type: Object, required: true },
         collection: { type: Object, required: true },
+        settings: { type: Object, required: true },
         config: { type: Object, required: true },
     },
     emits: ['update:config'],
