@@ -10,7 +10,7 @@
                     :options="routesOptions"
                     required
                     label="Route"
-                    @update:modelValue="setRoutePath"
+                    @update:modelValue="setRouteInfo"
                 />
                 <button type="button" class="ww-editor-button -secondary -small -icon ml-2" @click="fetchRoutes">
                     <wwEditorIcon name="refresh" medium />
@@ -196,9 +196,10 @@ export default {
         };
     },
     methods: {
-        setRoutePath(name) {
+        setRouteInfo(name) {
             const path = this.routes.find(route => route.Name === name)?.Path;
-            this.$emit('update:config', { ...this.config, path, name });
+            const method = this.routes.find(route => route.Name === name)?.Method;
+            this.$emit('update:config', { ...this.config, path, name, method });
         },
         setProp(key, value) {
             const updatedRoute = { ...this.route, [key]: value };
