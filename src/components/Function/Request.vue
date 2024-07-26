@@ -147,7 +147,9 @@ export default {
     },
     emits: ['update:args'],
     setup(props) {
-        const { routes, fetchRoutes } = useFastgenInstance();
+        const { fetchRoutes } = useFastgenInstance();
+
+        const routes = computed(() => props.plugin.settings.publicData?.routes || []);
 
         const routesOptions = computed(() => {
             return routes.value.map(api => ({
@@ -157,7 +159,9 @@ export default {
         });
 
         const selectedRoute = computed(() => {
-            return routes.value.find(route => route.Path === props.args.path && route.Name === props.args.name) || {};
+            return (
+                routes.value.find(route => route.Path === props.config.path && route.Name === props.config.name) || {}
+            );
         });
 
         const route = computed(() => {
