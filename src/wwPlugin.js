@@ -5,13 +5,8 @@ import './components/Collection/CollectionSummary.vue';
 /* wwEditor:end */
 
 export default {
-    async _onLoad(settings) {
-        console.log('✅ Fastgen Datasource loaded', settings.publicData);
-    },
-
     async _fetchCollection(collection) {
         try {
-            console.log('✅ Fetching collection', collection);
             const { data } = await this.request(collection.config);
             return { data, error: null };
         } catch (err) {
@@ -43,14 +38,6 @@ export default {
 
         const params = typeof queries === 'object' ? queries : computeList(queries);
         const data = shouldHaveBody ? (typeof body === 'object' ? body : computeList(body)) : null;
-
-        console.log('✅ Request', url, 'with method', method, 'and payload', {
-            url,
-            method,
-            params,
-            data,
-            headers: buildFastgenHeaders({ authToken, dataType }, headers),
-        });
 
         return await axios({
             url,
