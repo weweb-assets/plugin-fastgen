@@ -25,8 +25,8 @@ export default {
             (wwLib.wwPlugins.fastgenAuth && wwLib.wwPlugins.fastgenAuth.accessToken) ||
             Object.values(wwLib.wwPlugins).find(plugin => plugin.name === 'Fastgen Auth')?.accessToken;
 
-        let url = 'https://' + this.settings.publicData.project.value.Subdomain + path;
-        const route = this.settings.publicData.routes.value.find(route => route.Path === path);
+        let url = 'https://' + this.settings.publicData.project?.Subdomain + path;
+        const route = this.settings.publicData.routes.find(route => route.Path === path);
         const method = route.Method;
 
         for (const key in queries) url = url.replace(`{${key}}`, queries[key]);
