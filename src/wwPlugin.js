@@ -55,8 +55,8 @@ export default {
         return await axios({
             url,
             method,
-            params: computeList(queries),
-            data: shouldHaveBody ? computeList(body) : null,
+            params,
+            data,
             headers: buildFastgenHeaders({ authToken, dataType }, headers),
         });
     },
