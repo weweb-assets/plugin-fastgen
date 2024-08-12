@@ -1,20 +1,27 @@
 <template>
     <div class="fastgen-api-collection-edit">
-        <wwEditorInputRow
-            type="select"
-            placeholder="Select a route"
-            :model-value="route.path"
-            :disabled="!plugin.project"
-            :options="routesOptions"
-            required
-            label="Route"
-            @update:modelValue="setRoutePath"
-        />
+        <wwEditorFormRow label="Route" required>
+            <div class="flex items-center">
+                <wwEditorInputTextSelect
+                    class="w-100"
+                    placeholder="Select a route"
+                    :disabled="!plugin.project || isFetching"
+                    :model-value="selectedRoute.Name"
+                    :options="routesOptions"
+                    required
+                    label="Route"
+                    @update:modelValue="setRouteInfo"
+                />
+                <button type="button" class="ww-editor-button -secondary -small -icon ml-2" @click="fetchRoutes">
+                    <wwEditorIcon name="refresh" medium />
+                </button>
+            </div>
+        </wwEditorFormRow>
 
         <div v-if="selectedRoute.Name">
             <div class="p-2 mb-4 ww-border-radius-02 border-primary">
                 {{ selectedRoute.Name }} <br />
-                <span class="body-sm content-secondary mt-1">{{ plugin.project.Subdomain + selectedRoute.Path }}</span>
+                <span class="body-sm content-secondary mt-1">{{ project?.Subdomain || '' + selectedRoute.Path }}</span>
             </div>
 
             <wwEditorFormRow v-if="selectedRoute.Description" label="Description">
@@ -66,6 +73,7 @@
             </wwEditorInputRow>
 
             <wwEditorInputRow
+                v-if="shouldHaveBody"
                 label="Body"
                 type="array"
                 :model-value="route.body"
@@ -129,6 +137,9 @@
 </template>
 
 <script>
+import { ref, computed, onMounted } from 'vue';
+import useFastgenInstance from '../../useFastgenInstance';
+
 export default {
     props: {
         plugin: { type: Object, required: true },
@@ -136,42 +147,69 @@ export default {
         config: { type: Object, required: true },
     },
     emits: ['update:config'],
-    data() {
-        return {};
-    },
-    computed: {
-        routesOptions() {
-            return this.plugin.routes.map(api => ({
-                label: `${api.Method} - ${api.Name}`,
-                value: api.Path,
+    setup(props) {
+        const isFetching = ref(false);
+
+        const { fetchRoutes, routes } = useFastgenInstance();
+
+        const routesOptions = computed(() => {
+            return routes.value.map(api => ({
+                label: api.Name,
+                value: api.Name,
             }));
-        },
-        selectedRoute() {
-            return this.plugin.routes.find(route => route.Path === this.config.path) || {};
-        },
-        route() {
+        });
+
+        const selectedRoute = computed(() => {
+            return (
+                routes.value.find(route => route.Path === props.config.path && route.Name === props.config.name) || {}
+            );
+        });
+
+        const route = computed(() => {
             return {
                 path: null,
+                name: null,
                 headers: [],
                 body: [],
-                ...this.config,
+                ...props.config,
             };
-        },
+        });
+
+        const shouldHaveBody = computed(() => {
+            return selectedRoute.value.Method === 'POST' || selectedRoute.value.Method === 'PATCH';
+        });
+
+        onMounted(async () => {
+            isFetching.value = true;
+            await fetchRoutes();
+            isFetching.value = false;
+        });
+
+        return {
+            fetchRoutes,
+            routesOptions,
+            selectedRoute,
+            routes,
+            route,
+            shouldHaveBody,
+            isFetching,
+        };
     },
     methods: {
-        setRoutePath(path) {
-            this.$emit('update:config', { ...this.config, path });
+        setRouteInfo(name) {
+            const path = this.routes.find(route => route.Name === name)?.Path;
+            const method = this.routes.find(route => route.Name === name)?.Method;
+            this.$emit('update:config', { ...this.config, path, name, method });
         },
         setProp(key, value) {
             const updatedRoute = { ...this.route, [key]: value };
             this.$emit('update:config', updatedRoute);
         },
+        async fetchRoutes() {
+            this.isFetching = true;
+            await this.fetchRoutes();
+            this.isFetching = false;
+        },
     },
 };
 </script>
-
-<style>
-.code-editor {
-    max-height: 200px;
-}
-</style>

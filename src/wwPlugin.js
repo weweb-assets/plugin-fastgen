@@ -5,42 +5,10 @@ import './components/Collection/CollectionSummary.vue';
 /* wwEditor:end */
 
 export default {
-    websiteId: null,
-    project: null,
-    routes: [],
-    async onLoad(settings) {
-        this.websiteId = wwLib.wwWebsiteData.getInfo()?.id;
-        /* wwEditor:start */
-        if (settings.privateData.integrationToken) {
-            this.fetchProject();
-            this.fetchRoutes();
-        }
-        /* wwEditor:end */
-    },
-    async fetchProject() {
-        const response = await wwAxios.get(
-            `${wwLib.wwApiRequests._getPluginsUrl()}/designs/${this.websiteId}/fastgen/project`
-        );
-
-        this.project = response.data.data;
-    },
-    async fetchRoutes() {
-        const response = await wwAxios.get(
-            `${wwLib.wwApiRequests._getPluginsUrl()}/designs/${this.websiteId}/fastgen/project/routes`
-        );
-
-        this.routes = response.data.data;
-    },
-    /*=============================================m_ÔÔ_m=============================================\
-        Collection API
-    \================================================================================================*/
-    async fetchCollection(collection) {
+    async _fetchCollection(collection) {
         try {
-            const { path, headers, body, queries } = collection.config;
-
-            const responseData = await this._apiRequest(path, body, headers, queries);
-
-            return { data: responseData, error: null };
+            const { data } = await this.request(collection.config);
+            return { data, error: null };
         } catch (err) {
             return {
                 error: Object.getOwnPropertyNames(err).reduce((obj, key) => ({ ...obj, [key]: err[key] }), {}),
@@ -48,95 +16,45 @@ export default {
         }
     },
 
-    async apiRequest({ path, body, headers, queries }, wwUtils) {
+    async request({ path, method, headers, queries, body, dataType }, wwUtils) {
+        const authToken =
+            (wwLib.wwPlugins.fastgenAuth && wwLib.wwPlugins.fastgenAuth.accessToken) ||
+            Object.values(wwLib.wwPlugins).find(plugin => plugin.name === 'Fastgen Auth')?.accessToken;
+
+        let url = 'https://' + this.settings.publicData.project?.Subdomain + path;
+        for (const key in queries) url = url.replace(`{${key}}`, queries[key]);
+
         /* wwEditor:start */
-        const route = this.routes.find(route => route.Path === path);
-        const method = route.Method;
-
-        const payload = computePayload(method, body, headers, queries);
-        if (wwUtils) {
-            wwUtils.log('info', `Executing request ${method} on ${path}`, {
-                type: 'request',
-                preview: {
-                    Data: payload.data,
-                    Headers: payload.headers,
-                },
-            });
-        }
-
+        wwUtils?.log('info', `[Fastgen] Requesting ${method.toUpperCase()} - ${url}`, {
+            type: 'request',
+            preview: body,
+        });
         /* wwEditor:end */
-        return await this._apiRequest(path, body, headers, queries);
-    },
 
-    async _apiRequest(path, body, headers, queries) {
-        const url = 'https://' + this.project.Subdomain + path;
-        const route = this.routes.find(route => route.Path === path);
-        const method = route.Method;
+        const shouldHaveBody = ['POST', 'PATCH'].includes(method);
+        const params = Array.isArray(queries) ? computeList(queries) : queries;
+        const data = shouldHaveBody ? (Array.isArray(body) ? computeList(body) : body) : null;
 
-        const payload = computePayload(method, body, headers, queries);
-
-        const response = await axios({
+        return await axios({
             url,
             method,
-            data: payload.data,
-            headers: payload.headers,
-            params: payload.params,
+            params,
+            data,
+            headers: buildFastgenHeaders({ authToken, dataType }, headers),
         });
-
-        return response.data;
     },
-
-    /* wwEditor:start */
-    getCollectionErrorDetails(collection) {
-        return (
-            collection.error &&
-            collection.error.message &&
-            collection.error.message === 'Network Error' &&
-            '⚠️ There is a network error. That can happen when the server you are trying to call is down, or it is not found, or there is a CORS issue because the server expects a call from another server and not a frontend like WeWeb.'
-        );
-    },
-    /* wwEditor:end */
 };
-
-function computePayload(method, data, headers, params, dataType, useRawBody) {
-    if (!useRawBody) {
-        data = computeList(data);
-
-        switch (dataType) {
-            case 'application/x-www-form-urlencoded': {
-                data = qs.stringify(data);
-                break;
-            }
-            case 'multipart/form-data': {
-                const formData = new FormData();
-                for (const key in data) formData.append(key, data[key]);
-                data = formData;
-                break;
-            }
-            default:
-                break;
-        }
-    }
-
-    switch (method) {
-        case 'GET':
-        case 'DELETE':
-            data = undefined;
-            break;
-        default:
-            break;
-    }
-
-    return {
-        data,
-        params: computeList(params),
-        headers: {
-            'content-type': dataType || 'application/json',
-            ...computeList(headers),
-        },
-    };
-}
 
 function computeList(list) {
     return (list || []).reduce((obj, item) => ({ ...obj, [item.key]: item.value }), {});
+}
+
+function buildFastgenHeaders({ authToken, dataType }, customHeaders = []) {
+    return {
+        ...(authToken ? { Authorization: `Bearer ${authToken}` } : {}),
+        ...(dataType ? { 'Content-Type': dataType || 'application/json' } : {}),
+        ...(Array.isArray(customHeaders) ? customHeaders : [])
+            .filter(header => !!header && !!header.key)
+            .reduce((curr, next) => ({ ...curr, [next.key]: next.value }), {}),
+    };
 }

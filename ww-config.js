@@ -1,4 +1,7 @@
 export default {
+    features: {
+        datasource: true,
+    },
     editor: {
         settings: {
             edit: () => import('./src/components/SettingsEdit.vue'),
@@ -6,7 +9,7 @@ export default {
             getIsValid() {
                 return true;
             },
-            onSave: 'onLoad',
+            onSave: '_onLoad',
         },
         collection: {
             edit: () => import('./src/components/Collection/CollectionEdit.vue'),
@@ -20,7 +23,7 @@ export default {
     actions: [
         {
             name: 'Request',
-            code: 'apiRequest',
+            code: 'request',
             isAsync: true,
             /* wwEditor:start */
             edit: () => import('./src/components/Function/Request.vue'),
