@@ -32,7 +32,6 @@
             type="query"
             full
             placeholder="Domain"
-            required
             :model-value="settings.publicData.project?.Subdomain"
             :disabled="!settings.publicData.project"
             @update:modelValue="setCustomDomain"
