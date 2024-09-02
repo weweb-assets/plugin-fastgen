@@ -42,6 +42,21 @@
                 <wwEditorInputPreview :value="selectedRoute.BodyValidation" colored formated />
             </wwEditorFormRow>
 
+            <wwEditorFormRow label="Body Validation" v-else-if="selectedRoute.Method === 'GET'">
+                <!-- TO BE REPLACED BY THE NEW EDITOR INFOBOX -->
+                <div class="p-2 ww-border-radius-02 border-primary">
+                    While not strictly prohibited by the specification, the semantics of sending a message body in GET
+                    requests are undefined. Some systems may reject the request with a 400 or another 4XX client error.
+                    <a
+                        href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Methods/GET"
+                        target="_blank"
+                        class="mt-2 ww-editor-link"
+                    >
+                        Get - MDN
+                    </a>
+                </div>
+            </wwEditorFormRow>
+
             <wwEditorInputRow
                 label="Headers"
                 type="array"

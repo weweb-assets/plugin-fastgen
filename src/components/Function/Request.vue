@@ -42,13 +42,29 @@
                 <wwEditorInputPreview :value="selectedRoute.BodyValidation" colored formated />
             </wwEditorFormRow>
 
+            <wwEditorFormRow label="Body Validation" v-else-if="selectedRoute.Method === 'GET'">
+                <!-- TO BE REPLACED BY THE NEW EDITOR INFOBOX -->
+                <div class="body-sm p-2 ww-border-radius-02 border-primary">
+                    While not strictly prohibited by the specification, the semantics of sending a message body in GET
+                    requests are undefined. Some systems may reject the request with a 400 or another 4XX client error.
+                    <br />
+                    <a
+                        href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Methods/GET"
+                        target="_blank"
+                        class="mt-2 ww-editor-link"
+                    >
+                        Get - MDN
+                    </a>
+                </div>
+            </wwEditorFormRow>
+
             <wwEditorInputRow
                 label="Headers"
                 type="array"
                 :model-value="route.headers"
                 :bindable="true"
                 @update:modelValue="setHeaders"
-                @add-item="setHeaders([...(headers || []), {}])"
+                @add-item="setHeaders([...(route.headers || []), {}])"
             >
                 <template #default="{ item, setItem }">
                     <wwEditorInputRow
@@ -79,7 +95,7 @@
                 :model-value="route.body"
                 :bindable="true"
                 @update:modelValue="setBody"
-                @add-item="setBody([...(body || []), {}])"
+                @add-item="setBody([...(route.body || []), {}])"
             >
                 <template #default="{ item, setItem }">
                     <wwEditorInputRow
@@ -109,7 +125,7 @@
                 :model-value="route.queries"
                 :bindable="true"
                 @update:modelValue="setQueries"
-                @add-item="setQueries([...(queries || []), {}])"
+                @add-item="setQueries([...(route.queries || []), {}])"
             >
                 <template #default="{ item, setItem }">
                     <wwEditorInputRow
