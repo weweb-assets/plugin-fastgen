@@ -8,7 +8,7 @@ export default () => {
 
     async function fetchProject() {
         const response = await wwAxios.get(
-            `${wwLib.wwApiRequests._getPluginsUrl()}/designs/${websiteId}/fastgen/datasource/project/type/datasource`
+            `${wwLib.wwApiRequests._getPluginsUrl()}/designs/${websiteId}/fastgen/datasource/project`
         );
 
         PROJECT.value = response.data.data;
@@ -16,7 +16,7 @@ export default () => {
 
     async function fetchRoutes() {
         const response = await wwAxios.get(
-            `${wwLib.wwApiRequests._getPluginsUrl()}/designs/${websiteId}/fastgen/project/routes/type/datasource`
+            `${wwLib.wwApiRequests._getPluginsUrl()}/designs/${websiteId}/fastgen/project/routes`
         );
 
         ROUTES.value = response.data.data;
