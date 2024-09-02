@@ -16,7 +16,7 @@ export default () => {
 
     async function fetchRoutes() {
         const response = await wwAxios.get(
-            `${wwLib.wwApiRequests._getPluginsUrl()}/designs/${websiteId}/fastgen/datasource/project/routes`
+            `${wwLib.wwApiRequests._getPluginsUrl()}/designs/${websiteId}/fastgen/project/routes`
         );
 
         ROUTES.value = response.data.data;
