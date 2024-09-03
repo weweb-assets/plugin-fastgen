@@ -167,12 +167,9 @@ export default {
 
         const { fetchRoutes, routes } = useFastgenInstance();
 
-        const routesOptions = computed(() => {
-            return routes.value.map(api => ({
-                label: api.Name,
-                value: api.Name,
-            }));
-        });
+        const routesOptions = computed(() => [
+            ...new Map(routes.value.map(api => [api.Name, { label: api.Name, value: api.Name }])).values(),
+        ]);
 
         const selectedRoute = computed(() => {
             return (
