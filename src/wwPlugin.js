@@ -5,10 +5,6 @@ import './components/Collection/CollectionSummary.vue';
 /* wwEditor:end */
 
 export default {
-    async _onLoad(settings) {
-        console.log('Fastgen plugin loaded', settings);
-    },
-
     async _fetchCollection(collection) {
         try {
             const { data } = await this.request(collection.config);
