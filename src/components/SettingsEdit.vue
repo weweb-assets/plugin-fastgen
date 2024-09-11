@@ -68,8 +68,8 @@ export default {
             });
 
             if (integrationToken) {
-                await this.fetchProject();
-                await this.fetchRoutes();
+                await this.fetchProject(integrationToken);
+                await this.fetchRoutes(integrationToken);
 
                 this.$emit('update:settings', {
                     ...this.settings,

@@ -6,18 +6,26 @@ const ROUTES = ref([]);
 export default () => {
     const websiteId = wwLib.wwWebsiteData.getInfo()?.id;
 
-    async function fetchProject() {
-        const response = await wwAxios.get(
-            `${wwLib.wwApiRequests._getPluginsUrl()}/designs/${websiteId}/fastgen/datasource/project`
-        );
+    async function fetchProject(integrationToken = null) {
+        const url = new URL(`${wwLib.wwApiRequests._getPluginsUrl()}/designs/${websiteId}/fastgen/datasource/project`);
+
+        if (integrationToken) {
+            url.searchParams.append('integrationToken', integrationToken);
+        }
+
+        const response = await wwAxios.get(url.toString());
 
         PROJECT.value = response.data.data;
     }
 
-    async function fetchRoutes() {
-        const response = await wwAxios.get(
-            `${wwLib.wwApiRequests._getPluginsUrl()}/designs/${websiteId}/fastgen/project/routes`
-        );
+    async function fetchRoutes(integrationToken = null) {
+        const url = new URL(`${wwLib.wwApiRequests._getPluginsUrl()}/designs/${websiteId}/fastgen/project/routes`);
+
+        if (integrationToken) {
+            url.searchParams.append('integrationToken', integrationToken);
+        }
+
+        const response = await wwAxios.get(url.toString());
 
         ROUTES.value = response.data.data;
     }
