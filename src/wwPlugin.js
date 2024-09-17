@@ -9,8 +9,8 @@ export default {
     async _onLoad(settings) {
         const { fetchProject, fetchRoutes } = useFastgenInstance();
         if (settings.privateData.integrationToken) {
-            await fetchProject(settings.privateData.integrationToken);
-            await fetchRoutes(settings.privateData.integrationToken);
+            await fetchProject();
+            await fetchRoutes();
         }
     },
 

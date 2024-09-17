@@ -31,11 +31,9 @@ export default {
         const { fetchProject, project } = useFastgenInstance();
         const isLoading = ref(true);
 
-        const token = props.settings.privateData.integrationToken;
-
         onMounted(async () => {
-            if (token) {
-                await fetchProject(token);
+            if (props.settings.privateData.integrationToken) {
+                await fetchProject();
 
                 emit('update:settings', {
                     ...props.settings,
