@@ -19,7 +19,7 @@ export default {
                 getIsValid(config) {
                     return !!config.publicData.project?.Subdomain;
                 },
-                onSave: 'init',
+                onSave: '_init',
             },
         ],
         collection: {
