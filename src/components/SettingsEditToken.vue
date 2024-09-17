@@ -72,15 +72,6 @@ export default {
                 });
             }
         },
-        setCustomDomain(domain) {
-            this.$emit('update:settings', {
-                ...this.settings,
-                publicData: {
-                    ...this.settings.publicData,
-                    project: { ...this.settings.publicData.project, Subdomain: domain },
-                },
-            });
-        },
     },
 };
 </script>
