@@ -8,15 +8,15 @@ export default {
                 edit: () => import('./src/components/SettingsEditToken.vue'),
                 summary: () => import('./src/components/SettingsSummaryToken.vue'),
                 getIsValid(config) {
-                    console.log('config', config);
-                    return !!config.integrationToken;
+                    return !!config.privateData.integrationToken;
                 },
             },
             {
+                label: 'Domain configuration',
                 edit: () => import('./src/components/SettingsEditSubdomain.vue'),
                 summary: () => import('./src/components/SettingsSummarySubdomain.vue'),
                 getIsValid(config) {
-                    return !!config.subdomain;
+                    return !!config.publicData.project?.Subdomain;
                 },
             },
         ],

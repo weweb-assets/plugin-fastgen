@@ -1,5 +1,5 @@
 <template>
-    <wwEditorFormRow label="Integration token">
+    <wwEditorFormRow label="Domain">
         <div class="p-2 ww-border-radius-02 border-primary">
             <div class="body-sm content-secondary">
                 <span
