@@ -28,7 +28,6 @@
             </div>
         </wwEditorFormRow>
     </div>
-    <wwLoader :loading="isLoading" />
 </template>
 
 <script>
@@ -48,7 +47,6 @@ export default {
     data() {
         return {
             isTokenVisible: false,
-            isLoading: false,
         };
     },
     methods: {
