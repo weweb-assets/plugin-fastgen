@@ -12,8 +12,8 @@ export default {
                 },
             },
             {
-                edit: () => import('./src/components/SettingsEdit.vue'),
-                summary: () => import('./src/components/SettingsSummary.vue'),
+                edit: () => import('./src/components/SettingsEditSubdomain.vue'),
+                summary: () => import('./src/components/SettingsSummarySubdomain.vue'),
                 getIsValid() {
                     return true;
                 },
