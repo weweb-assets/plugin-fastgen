@@ -1,5 +1,5 @@
 <template>
-    <wwEditorFormRow label="Integration token">
+    <wwEditorFormRow>
         <div class="flex items-center mb-2 pt-2">
             <div><wwEditorIcon large name="key" class="mr-2" /></div>
             <span class="truncate">{{

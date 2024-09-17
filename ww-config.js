@@ -5,6 +5,7 @@ export default {
     editor: {
         settings: [
             {
+                label: 'Token configuration',
                 edit: () => import('./src/components/SettingsEditToken.vue'),
                 summary: () => import('./src/components/SettingsSummaryToken.vue'),
                 getIsValid(config) {
@@ -18,6 +19,7 @@ export default {
                 getIsValid(config) {
                     return !!config.publicData.project?.Subdomain;
                 },
+                onSave: 'init',
             },
         ],
         collection: {

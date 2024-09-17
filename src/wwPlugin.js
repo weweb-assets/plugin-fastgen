@@ -3,8 +3,15 @@ import qs from 'qs';
 import './components/Collection/CollectionEdit.vue';
 import './components/Collection/CollectionSummary.vue';
 /* wwEditor:end */
+import useFastgenInstance from '../useFastgenInstance';
 
 export default {
+    async init() {
+        const { fetchProject, fetchRoutes } = useFastgenInstance();
+        await fetchProject();
+        await fetchRoutes();
+    },
+
     async _fetchCollection(collection) {
         try {
             const { data } = await this.request(collection.config);
