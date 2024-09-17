@@ -6,10 +6,12 @@ import './components/Collection/CollectionSummary.vue';
 import useFastgenInstance from './useFastgenInstance';
 
 export default {
-    async _init() {
+    async _onLoad(settings) {
         const { fetchProject, fetchRoutes } = useFastgenInstance();
-        await fetchProject();
-        await fetchRoutes();
+        if (settings.privateData.integrationToken) {
+            await fetchProject(settings.privateData.integrationToken);
+            await fetchRoutes(settings.privateData.integrationToken);
+        }
     },
 
     async _fetchCollection(collection) {
