@@ -1,6 +1,7 @@
 <template>
     <div class="flex flex-col">
         <wwEditorInputRow
+            v-if="!isLoading"
             label="Domain"
             type="query"
             full
@@ -9,12 +10,15 @@
             :disabled="!settings.publicData.project"
             @update:modelValue="setCustomDomain"
         />
+        <div v-else class="flex flex-row items-center">
+            <wwLoaderSmall :loading="isLoading" />
+            <div class="ml-2 body-sm">Gathering your project information...</div>
+        </div>
     </div>
-    <wwLoader :loading="isLoading" />
 </template>
 
 <script>
-import { onMounted } from 'vue';
+import { ref, onMounted } from 'vue';
 import useFastgenInstance from '../useFastgenInstance';
 
 export default {
@@ -25,6 +29,7 @@ export default {
     emits: ['update:settings'],
     setup(props, { emit }) {
         const { fetchProject, project } = useFastgenInstance();
+        const isLoading = ref(true);
 
         const token = props.settings.privateData.integrationToken;
 
@@ -39,15 +44,18 @@ export default {
                         project: { Name: project.value?.Name, Subdomain: project.value?.Subdomain },
                     },
                 });
+
+                setTimeout(() => {
+                    isLoading.value = false;
+                }, 3000);
             }
         });
 
-        return {};
+        return { isLoading };
     },
     data() {
         return {
             isTokenVisible: false,
-            isLoading: false,
         };
     },
     methods: {
