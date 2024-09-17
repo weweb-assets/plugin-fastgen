@@ -7,15 +7,16 @@ export default {
             {
                 edit: () => import('./src/components/SettingsEditToken.vue'),
                 summary: () => import('./src/components/SettingsSummaryToken.vue'),
-                getIsValid({ integrationToken }) {
-                    return !!integrationToken;
+                getIsValid(config) {
+                    console.log('config', config);
+                    return !!config.integrationToken;
                 },
             },
             {
                 edit: () => import('./src/components/SettingsEditSubdomain.vue'),
                 summary: () => import('./src/components/SettingsSummarySubdomain.vue'),
-                getIsValid() {
-                    return true;
+                getIsValid(config) {
+                    return !!config.subdomain;
                 },
             },
         ],

@@ -27,15 +27,6 @@
                 </button>
             </div>
         </wwEditorFormRow>
-        <wwEditorInputRow
-            label="Domain"
-            type="query"
-            full
-            placeholder="Domain"
-            :model-value="settings.publicData.project?.Subdomain"
-            :disabled="!settings.publicData.project"
-            @update:modelValue="setCustomDomain"
-        />
     </div>
     <wwLoader :loading="isLoading" />
 </template>
