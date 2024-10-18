@@ -1,5 +1,10 @@
 <template>
     <div class="flex flex-col">
+        <InfoBox
+            v-if="!isLoading"
+            class="mb-2"
+            content="Please do not change this domain unless you are using a custom domain which is different to the one you set in your Fastgen project."
+        />
         <wwEditorInputRow
             v-if="!isLoading"
             label="Domain"
