@@ -3,14 +3,25 @@ export default {
         datasource: true,
     },
     editor: {
-        settings: {
-            edit: () => import('./src/components/SettingsEdit.vue'),
-            summary: () => import('./src/components/SettingsSummary.vue'),
-            getIsValid() {
-                return true;
+        settings: [
+            {
+                label: 'Token configuration',
+                edit: () => import('./src/components/SettingsEditToken.vue'),
+                summary: () => import('./src/components/SettingsSummaryToken.vue'),
+                getIsValid(config) {
+                    return !!config.privateData.integrationToken;
+                },
             },
-            onSave: '_onLoad',
-        },
+            {
+                label: 'Domain configuration',
+                edit: () => import('./src/components/SettingsEditSubdomain.vue'),
+                summary: () => import('./src/components/SettingsSummarySubdomain.vue'),
+                getIsValid(config) {
+                    return !!config.publicData.project?.Subdomain;
+                },
+                onSave: '_onLoad',
+            },
+        ],
         collection: {
             edit: () => import('./src/components/Collection/CollectionEdit.vue'),
             summary: () => import('./src/components/Collection/CollectionSummary.vue'),

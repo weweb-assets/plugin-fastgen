@@ -39,7 +39,26 @@
             </wwEditorFormRow>
 
             <wwEditorFormRow label="Body Validation" v-if="Object.keys(selectedRoute.BodyValidation).length">
-                <wwEditorInputPreview :value="selectedRoute.BodyValidation" colored formated />
+                <wwEditorInputPreview
+                    v-if="selectedRoute.Method !== 'GET'"
+                    :value="selectedRoute.BodyValidation"
+                    colored
+                    formated
+                />
+                <InfoBox v-else>
+                    <template #content>
+                        While not strictly prohibited by the specification, the semantics of sending a message body in
+                        GET requests are undefined. Some systems may reject the request with a 400 or another 4XX client
+                        error. <br />
+                        <a
+                            href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Methods/GET"
+                            target="_blank"
+                            class="mt-2 ww-editor-link"
+                        >
+                            Get documentation - MDN
+                        </a>
+                    </template>
+                </InfoBox>
             </wwEditorFormRow>
 
             <wwEditorInputRow
@@ -152,12 +171,9 @@ export default {
 
         const { fetchRoutes, routes } = useFastgenInstance();
 
-        const routesOptions = computed(() => {
-            return routes.value.map(api => ({
-                label: api.Name,
-                value: api.Name,
-            }));
-        });
+        const routesOptions = computed(() => [
+            ...new Map(routes.value.map(api => [api.Name, { label: api.Name, value: api.Name }])).values(),
+        ]);
 
         const selectedRoute = computed(() => {
             return (
