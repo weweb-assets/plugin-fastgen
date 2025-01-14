@@ -30,6 +30,42 @@ export default {
             getIsValid({ path }) {
                 return !!path;
             },
+            copilot: {
+                description: 'Make a request to a Fastgen API endpoint',
+                returns: 'object',
+                schema: {
+                    path: {
+                        type: 'string',
+                        description: 'The API endpoint path',
+                        bindable: true
+                    },
+                    method: {
+                        type: 'string',
+                        description: 'HTTP method (GET, POST, PATCH, etc)',
+                        bindable: true
+                    },
+                    headers: {
+                        type: 'array',
+                        description: 'Request headers as key-value pairs',
+                        bindable: true
+                    },
+                    queries: {
+                        type: 'array',
+                        description: 'URL query parameters as key-value pairs',
+                        bindable: true
+                    },
+                    body: {
+                        type: 'array',
+                        description: 'Request body data as key-value pairs (for POST/PATCH)',
+                        bindable: true
+                    },
+                    dataType: {
+                        type: 'string',
+                        description: 'Content-Type header value',
+                        bindable: true
+                    }
+                }
+            }
             /* wwEditor:end */
         },
     ],
