@@ -1,0 +1,290 @@
+{
+    "schemaVersion": 1,
+    "features": {
+        "datasource": true
+    },
+    "settings": {
+        "groups": [
+            {
+                "key": "account",
+                "label": "Token configuration"
+            },
+            {
+                "key": "project",
+                "label": "Domain configuration"
+            }
+        ],
+        "fields": [
+            {
+                "key": "integrationToken",
+                "group": "account",
+                "label": "Integration token",
+                "type": "secret",
+                "storage": "privateData",
+                "required": true,
+                "help": {
+                    "text": "Manage the integration token in Fastgen.",
+                    "link": {
+                        "label": "Integration tokens",
+                        "url": "https://app.fastgen.com/settings/integrationToken/"
+                    }
+                }
+            },
+            {
+                "key": "projectName",
+                "group": "project",
+                "type": "display",
+                "label": "Project",
+                "publicPath": [
+                    "project",
+                    "Name"
+                ]
+            },
+            {
+                "key": "subdomain",
+                "group": "project",
+                "type": "text",
+                "label": "Domain",
+                "publicPath": [
+                    "project",
+                    "Subdomain"
+                ],
+                "operation": "fastgen.domain"
+            },
+            {
+                "key": "refreshProject",
+                "group": "project",
+                "type": "boolean",
+                "label": "Refresh project details on save",
+                "operation": "fastgen.refresh"
+            }
+        ],
+        "summary": [
+            {
+                "field": "projectName",
+                "label": "Project"
+            }
+        ]
+    },
+    "collection": {
+        "modes": [
+            "dynamic"
+        ],
+        "fields": [
+            {
+                "key": "name",
+                "type": "choice",
+                "label": "Route",
+                "placeholder": "Select a route",
+                "operation": "fastgen.routes"
+            },
+            {
+                "key": "path",
+                "label": "Path",
+                "type": "display",
+                "required": true
+            },
+            {
+                "key": "method",
+                "label": "Method",
+                "type": "display"
+            },
+            {
+                "key": "headers",
+                "label": "Headers",
+                "type": "list",
+                "bindable": true,
+                "initial": [],
+                "item": {
+                    "type": "record",
+                    "fields": [
+                        {
+                            "key": "key",
+                            "label": "Key",
+                            "type": "text",
+                            "bindable": true
+                        },
+                        {
+                            "key": "value",
+                            "label": "Value",
+                            "type": "text",
+                            "bindable": true
+                        }
+                    ]
+                }
+            },
+            {
+                "key": "body",
+                "label": "Body",
+                "type": "list",
+                "bindable": true,
+                "initial": [],
+                "item": {
+                    "type": "record",
+                    "fields": [
+                        {
+                            "key": "key",
+                            "label": "Key",
+                            "type": "text",
+                            "bindable": true
+                        },
+                        {
+                            "key": "value",
+                            "label": "Value",
+                            "type": "text",
+                            "bindable": true
+                        }
+                    ]
+                },
+                "visibleWhen": {
+                    "field": "method",
+                    "oneOf": [
+                        "POST",
+                        "PATCH"
+                    ]
+                }
+            },
+            {
+                "key": "queries",
+                "label": "Queries",
+                "type": "list",
+                "bindable": true,
+                "initial": [],
+                "item": {
+                    "type": "record",
+                    "fields": [
+                        {
+                            "key": "key",
+                            "label": "Key",
+                            "type": "text",
+                            "bindable": true
+                        },
+                        {
+                            "key": "value",
+                            "label": "Value",
+                            "type": "text",
+                            "bindable": true
+                        }
+                    ]
+                }
+            }
+        ],
+        "summary": [
+            {
+                "field": "method"
+            },
+            {
+                "field": "path"
+            }
+        ]
+    },
+    "actions": [
+        {
+            "code": "request",
+            "name": "Request",
+            "isAsync": true,
+            "validation": "requiredFields",
+            "form": {
+                "fields": [
+                    {
+                        "key": "name",
+                        "type": "choice",
+                        "label": "Route",
+                        "placeholder": "Select a route",
+                        "operation": "fastgen.routes"
+                    },
+                    {
+                        "key": "path",
+                        "label": "Path",
+                        "type": "display",
+                        "required": true
+                    },
+                    {
+                        "key": "method",
+                        "label": "Method",
+                        "type": "display"
+                    },
+                    {
+                        "key": "headers",
+                        "label": "Headers",
+                        "type": "list",
+                        "bindable": true,
+                        "initial": [],
+                        "item": {
+                            "type": "record",
+                            "fields": [
+                                {
+                                    "key": "key",
+                                    "label": "Key",
+                                    "type": "text",
+                                    "bindable": true
+                                },
+                                {
+                                    "key": "value",
+                                    "label": "Value",
+                                    "type": "text",
+                                    "bindable": true
+                                }
+                            ]
+                        }
+                    },
+                    {
+                        "key": "body",
+                        "label": "Body",
+                        "type": "list",
+                        "bindable": true,
+                        "initial": [],
+                        "item": {
+                            "type": "record",
+                            "fields": [
+                                {
+                                    "key": "key",
+                                    "label": "Key",
+                                    "type": "text",
+                                    "bindable": true
+                                },
+                                {
+                                    "key": "value",
+                                    "label": "Value",
+                                    "type": "text",
+                                    "bindable": true
+                                }
+                            ]
+                        },
+                        "visibleWhen": {
+                            "field": "method",
+                            "oneOf": [
+                                "POST",
+                                "PATCH"
+                            ]
+                        }
+                    },
+                    {
+                        "key": "queries",
+                        "label": "Queries",
+                        "type": "list",
+                        "bindable": true,
+                        "initial": [],
+                        "item": {
+                            "type": "record",
+                            "fields": [
+                                {
+                                    "key": "key",
+                                    "label": "Key",
+                                    "type": "text",
+                                    "bindable": true
+                                },
+                                {
+                                    "key": "value",
+                                    "label": "Value",
+                                    "type": "text",
+                                    "bindable": true
+                                }
+                            ]
+                        }
+                    }
+                ]
+            }
+        }
+    ]
+}
