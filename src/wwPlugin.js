@@ -1,4 +1,3 @@
-import qs from 'qs';
 /* wwEditor:start */
 import './components/Collection/CollectionEdit.vue';
 import './components/Collection/CollectionSummary.vue';
