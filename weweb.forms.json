@@ -35,20 +35,14 @@
                 "group": "project",
                 "type": "display",
                 "label": "Project",
-                "publicPath": [
-                    "project",
-                    "Name"
-                ]
+                "publicPath": ["project", "Name"]
             },
             {
                 "key": "subdomain",
                 "group": "project",
                 "type": "text",
                 "label": "Domain",
-                "publicPath": [
-                    "project",
-                    "Subdomain"
-                ],
+                "publicPath": ["project", "Subdomain"],
                 "operation": "fastgen.domain"
             },
             {
@@ -63,13 +57,15 @@
             {
                 "field": "projectName",
                 "label": "Project"
+            },
+            {
+                "field": "subdomain",
+                "label": "Domain"
             }
         ]
     },
     "collection": {
-        "modes": [
-            "dynamic"
-        ],
+        "modes": ["dynamic"],
         "fields": [
             {
                 "key": "name",
@@ -138,10 +134,7 @@
                 },
                 "visibleWhen": {
                     "field": "method",
-                    "oneOf": [
-                        "POST",
-                        "PATCH"
-                    ]
+                    "oneOf": ["POST", "PATCH"]
                 }
             },
             {
@@ -253,10 +246,7 @@
                         },
                         "visibleWhen": {
                             "field": "method",
-                            "oneOf": [
-                                "POST",
-                                "PATCH"
-                            ]
+                            "oneOf": ["POST", "PATCH"]
                         }
                     },
                     {
